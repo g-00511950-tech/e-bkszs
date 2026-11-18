@@ -746,9 +746,9 @@
                     <div class="space-y-2">
                         <label class="block text-xs font-semibold text-slate-700">URL Web App Google Apps Script (mesti berakhir dengan <code class="text-blue-700 font-bold">/exec</code>)</label>
                         <input type="url" id="admin-apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600">
-                        <p class="text-[11px] text-slate-500 leading-relaxed">
-                            Tip GitHub Pages: Tampalkan URL ini pada <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-700 font-bold">DEFAULT_APPS_SCRIPT_URL</code> dalam kod <code class="px-1 py-0.5 bg-slate-100 rounded">index.html</code> sebelum muat naik ke GitHub.
-                        </p>
+                        <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+                            <strong>Penting untuk Guru Sekolah:</strong> Gunakan akaun <strong>@gmail.com peribadi</strong> semasa membina Google Sheet & Apps Script. Akaun <strong>DELIMa (@moe-dl.edu.my)</strong> disekat oleh pentadbir KPM daripada akses awam (<em>Anyone</em>).
+                        </div>
                     </div>
 
                     <!-- Live Diagnostic Message Box -->
@@ -762,6 +762,10 @@
                         <button type="button" onclick="fetchFromCloud(true)" class="inline-flex items-center justify-center gap-1.5 bg-sky-50 hover:bg-sky-100 text-blue-800 border border-blue-200 text-xs font-semibold py-2 px-3 rounded-xl transition-colors cursor-pointer">
                             <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
                             <span>Tarik Data</span>
+                        </button>
+                        <button type="button" onclick="openAppsScriptUrlInNewTab()" title="Buka URL Apps Script di tab baharu untuk melihat output sebenar" class="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs font-semibold py-2 px-3 rounded-xl transition-colors cursor-pointer">
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                            <span>Uji di Tab Baharu</span>
                         </button>
                     </div>
                 </section>
@@ -2010,6 +2014,16 @@
             showToast(lastCloudDiagnostic, isConnected ? 'success' : 'info');
         }
 
+        function openAppsScriptUrlInNewTab() {
+            const url = (document.getElementById('admin-apps-script-url').value || getActiveScriptUrl()).trim();
+            if (!url) {
+                showToast('Sila tampalkan URL Web App Apps Script terlebih dahulu.', 'error');
+                return;
+            }
+            const sep = url.includes('?') ? '&' : '?';
+            window.open(`${url}${sep}action=load`, '_blank');
+        }
+
         function loadState() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
@@ -2056,10 +2070,16 @@
 
         function validateAppsScriptUrl(url) {
             if (!url) return { valid: false, reason: 'URL kosong.' };
+            if (url.includes('/a/macros/')) {
+                return {
+                    valid: false,
+                    reason: 'URL ini daripada akaun Google Workspace/DELIMa (@moe-dl.edu.my) yang disekat oleh pentadbir KPM. Sila cipta Google Sheet & Apps Script menggunakan akaun @gmail.com peribadi.'
+                };
+            }
             if (!url.startsWith('https://script.google.com/macros/s/')) {
                 return {
                     valid: false,
-                    reason: 'Format URL tidak sah! Pastikan anda menyalin Web App URL yang bermula dengan "https://script.google.com/macros/s/..." dan berakhir dengan "/exec" (bukan URL Google Sheet atau URL editor).'
+                    reason: 'Format URL tidak sah! Pastikan anda menyalin Web App URL yang bermula dengan "https://script.google.com/macros/s/..." dan berakhir dengan "/exec".'
                 };
             }
             if (url.endsWith('/dev')) {
@@ -2075,6 +2095,66 @@
                 };
             }
             return { valid: true };
+        }
+
+        // JSONP Fallback Loader (Bypasses strict browser CORS on script.googleusercontent.com redirects)
+        function loadViaJsonp(url) {
+            return new Promise((resolve, reject) => {
+                const cbName = '__ebkszs_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                const script = document.createElement('script');
+                const timer = setTimeout(() => {
+                    delete window[cbName];
+                    script.remove();
+                    reject(new Error('JSONP timeout'));
+                }, 10000);
+
+                window[cbName] = function(data) {
+                    clearTimeout(timer);
+                    delete window[cbName];
+                    script.remove();
+                    resolve(data);
+                };
+
+                script.onerror = function() {
+                    clearTimeout(timer);
+                    delete window[cbName];
+                    script.remove();
+                    reject(new Error('JSONP script error'));
+                };
+
+                const sep = url.includes('?') ? '&' : '?';
+                script.src = `${url}${sep}action=load&callback=${cbName}&t=${Date.now()}`;
+                document.head.appendChild(script);
+            });
+        }
+
+        function applyCloudPayload(data, url, showSuccessToast) {
+            if (data && data.status === 'ok') {
+                if (data.hasData && data.payload) {
+                    const incoming = data.payload;
+                    state = Object.assign(createDefaultState(), incoming.config || {});
+                    state.appsScriptUrl = url;
+                    if (Array.isArray(incoming.members)) {
+                        state.members = incoming.members;
+                    }
+                    if (incoming.logo !== undefined) {
+                        state.customLogoDataUrl = incoming.logo || '';
+                    }
+                    if (incoming.qr !== undefined) {
+                        state.qrImage = incoming.qr || null;
+                    }
+                    saveState(true);
+                    syncAllViews();
+                    setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya berhubung & menyegerakkan data terkini daripada Google Sheets.');
+                    if (showSuccessToast) {
+                        showToast('Data terkini berjaya disegerakkan daripada Google Sheets!', 'success');
+                    }
+                } else {
+                    pushToCloud(showSuccessToast);
+                }
+                return true;
+            }
+            return false;
         }
 
         async function fetchFromCloud(showSuccessToast = false) {
@@ -2104,43 +2184,32 @@
                 try {
                     data = JSON.parse(rawText);
                 } catch (parseErr) {
-                    const msg = 'Apps Script memulangkan halaman HTML (bukan JSON). Pastikan tetapan Deploy -> "Who has access" dipilih kepada "Anyone" (Sesiapa sahaja), bukan "Only myself".';
+                    const isFunctionMissing = rawText.includes('doGet') || rawText.includes('Script function not found');
+                    const msg = isFunctionMissing
+                        ? 'Kod Code.gs belum aktif di Deploy! Buka Apps Script -> Deploy -> Manage deployments -> Edit -> pilih "New version" -> Deploy.'
+                        : 'Apps Script memulangkan halaman log masuk HTML. Jika anda guna akaun DELIMa (@moe-dl.edu.my), tukar kepada akaun @gmail.com peribadi kerana KPM menyekat akses awam (Anyone).';
                     setCloudSyncIndicator('error', 'Akses Disekat', msg);
                     if (showSuccessToast) showToast(msg, 'error');
                     return;
                 }
 
-                if (data && data.status === 'ok') {
-                    if (data.hasData && data.payload) {
-                        const incoming = data.payload;
-                        const preservedUrl = url;
-                        state = Object.assign(createDefaultState(), incoming.config || {});
-                        state.appsScriptUrl = preservedUrl;
-                        if (Array.isArray(incoming.members)) {
-                            state.members = incoming.members;
-                        }
-                        if (incoming.logo !== undefined) {
-                            state.customLogoDataUrl = incoming.logo || '';
-                        }
-                        if (incoming.qr !== undefined) {
-                            state.qrImage = incoming.qr || null;
-                        }
-                        saveState(true);
-                        syncAllViews();
-                        setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya berhubung & menyegerakkan data terkini daripada Google Sheets.');
-                        if (showSuccessToast) {
-                            showToast('Data terkini berjaya disegerakkan daripada Google Sheets!', 'success');
-                        }
-                    } else {
-                        await pushToCloud(showSuccessToast);
-                    }
-                } else {
+                if (!applyCloudPayload(data, url, showSuccessToast)) {
                     const errMsg = `Ralat skrip Google Sheets: ${(data && data.message) || 'Tidak diketahui'}`;
                     setCloudSyncIndicator('error', 'Ralat Skrip', errMsg);
                     if (showSuccessToast) showToast(errMsg, 'error');
                 }
             } catch (err) {
-                const msg = 'Sambungan ke Google Apps Script disekat oleh pelayar (CORS / Akses). Sila pastikan di Apps Script: Deploy -> Manage deployments -> Who has access = "Anyone", dan cipta "New version".';
+                // Attempt anti-CORS JSONP fallback before reporting error
+                try {
+                    const jsonpData = await loadViaJsonp(url);
+                    if (applyCloudPayload(jsonpData, url, showSuccessToast)) {
+                        return;
+                    }
+                } catch (jsonpErr) {
+                    // Both fetch and JSONP blocked
+                }
+
+                const msg = 'Sambungan gagal: (1) Jika guna akaun DELIMa (@moe-dl.edu.my), sila bina semula di akaun @gmail.com peribadi. (2) Di Apps Script, klik Deploy -> Manage deployments -> Edit -> pilih "New version" & Who has access: "Anyone".';
                 setCloudSyncIndicator('error', 'Ralat Cloud', msg);
                 if (showSuccessToast) showToast(msg, 'error');
             }
@@ -2204,9 +2273,7 @@
                         body: serialized
                     });
                     await new Promise(r => setTimeout(r, 1200));
-                    const sep = url.includes('?') ? '&' : '?';
-                    const verifyRes = await fetch(`${url}${sep}action=load&t=${Date.now()}`, { method: 'GET', redirect: 'follow' });
-                    const verifyData = JSON.parse(await verifyRes.text());
+                    const verifyData = await loadViaJsonp(url);
                     if (verifyData && verifyData.status === 'ok') {
                         setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya disimpan ke Google Sheets (disahkan melalui mod keserasian pelayar).');
                         if (showSuccessToast) {
@@ -2218,7 +2285,7 @@
                     // Genuine connection / permission error
                 }
 
-                const msg = 'Ralat Cloud: Pelayar gagal menghantar data ke Google Apps Script. Pastikan "Who has access" ditetapkan kepada "Anyone" dan gunakan URL "/exec".';
+                const msg = 'Ralat Cloud: Pelayar gagal menyimpan ke Google Apps Script. Pastikan anda guna akaun @gmail.com peribadi (bukan DELIMa @moe-dl.edu.my) dan cipta "New version" di Deploy.';
                 setCloudSyncIndicator('error', 'Ralat Cloud', msg);
                 if (showSuccessToast) showToast(msg, 'error');
             }
@@ -4138,7 +4205,7 @@
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
-            }, 4500);
+            }, 5500);
         }
 
         // Boot Application on Load
