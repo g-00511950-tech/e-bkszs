@@ -95,76 +95,77 @@
 <body class="text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
 
     <!-- =====================================================================
-         1. TOP HEADER BAR & IDENTITI SEKOLAH (SENTIASA DIPAPARKAN)
+         1. TOP HEADER BAR & IDENTITI SEKOLAH (SUSUNAN 2 BARIS KEMAS - TIADA OVERLAP)
     ====================================================================== -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs no-print">
         <div class="h-1 w-full bg-gradient-to-r from-blue-800 via-blue-600 to-sky-500"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col xl:flex-row justify-between items-center py-3.5 gap-3.5">
+            
+            <!-- Baris 1: Identiti Sekolah (Kiri) + Lencana Cloud & Nama Bendahari (Kanan) -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between py-3 gap-3">
                 
                 <!-- Kiri: Logo Sekolah, Lencana e-BKSZS, Nama Sekolah & Sesi -->
-                <div class="flex items-center justify-between w-full xl:w-auto gap-3">
-                    <div class="flex items-center gap-3.5">
-                        <div id="header-logo-container" class="w-12 h-12 rounded-2xl bg-sky-50 border border-blue-200 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
-                            <!-- School Crest / Custom Logo rendered via JS -->
+                <div class="flex items-center gap-3.5 min-w-0">
+                    <div id="header-logo-container" class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-50 border border-blue-200 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
+                        <!-- School Crest / Custom Logo rendered via JS -->
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-lg bg-blue-700 text-white font-heading font-extrabold text-xs sm:text-sm tracking-tight shadow-2xs shrink-0">e-BKSZS</span>
+                            <span class="text-sm sm:text-base font-bold text-slate-900 truncate" id="header-school-session">SK Seri Damai • Sesi 2026</span>
                         </div>
-                        <div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="px-2.5 py-0.5 rounded-lg bg-blue-700 text-white font-heading font-extrabold text-sm tracking-tight shadow-2xs">e-BKSZS</span>
-                                <span class="text-sm sm:text-base font-bold text-slate-900" id="header-school-session">SK Seri Damai • Sesi 2026</span>
-                            </div>
-                            <p class="text-xs text-slate-500 font-medium mt-0.5" id="header-subtitle">
-                                Sistem Pengurusan Yuran Badan Kebajikan Guru & Staf
-                            </p>
-                        </div>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5 truncate" id="header-subtitle">
+                            Sistem Pengurusan Yuran Badan Kebajikan Guru & Staf
+                        </p>
                     </div>
                 </div>
 
-                <!-- Kanan: Status Cloud Sync, Lencana Bendahari & 3 Tab Navigasi Utama -->
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full xl:w-auto">
-                    <div class="flex items-center justify-between sm:justify-start gap-2">
-                        <!-- Real-Time Cloud Sync Status Badge + Manual Refresh -->
-                        <div class="inline-flex items-center gap-1.5">
-                            <span id="cloud-sync-badge" title="Status penyegerakan pangkalan data Google Sheets" class="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
-                                <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                                <span id="cloud-sync-text">Mod Tempatan</span>
-                            </span>
-                            <button type="button" id="btn-manual-refresh" onclick="fetchFromCloud(true)" title="Muat turun data terkini daripada Google Sheets" class="hidden p-1.5 rounded-full bg-sky-50 hover:bg-sky-100 text-blue-700 border border-blue-200 transition-colors cursor-pointer">
-                                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </div>
-
-                        <!-- Official Pill Badge: Bendahari -->
-                        <div class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-sky-50 text-blue-900 border border-blue-200 shrink-0 shadow-2xs">
-                            <i data-lucide="badge-check" class="w-4 h-4 text-blue-600 shrink-0"></i>
-                            <span>Bendahari: <strong id="header-treasurer-name" class="text-blue-800">Cikgu Hajah Rohana binti Ismail</strong></span>
-                        </div>
+                <!-- Kanan: Status Cloud Sync & Lencana Nama Bendahari -->
+                <div class="flex flex-wrap items-center justify-start lg:justify-end gap-2">
+                    <!-- Real-Time Cloud Sync Status Badge + Manual Refresh -->
+                    <div class="inline-flex items-center gap-1.5">
+                        <button type="button" id="cloud-sync-badge" onclick="showCloudDiagnosticToast()" title="Klik untuk lihat butiran status sambungan Google Sheets" class="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap cursor-pointer">
+                            <span id="cloud-sync-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+                            <span id="cloud-sync-text">Mod Tempatan</span>
+                        </button>
+                        <button type="button" id="btn-manual-refresh" onclick="fetchFromCloud(true)" title="Muat turun data terkini daripada Google Sheets" class="hidden p-1.5 rounded-full bg-sky-50 hover:bg-sky-100 text-blue-700 border border-blue-200 transition-colors cursor-pointer">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                        </button>
                     </div>
 
-                    <!-- 3 Main Role Navigation Tabs -->
-                    <nav class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 overflow-x-auto">
-                        <button id="nav-portal" onclick="requestView('portal')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-xs whitespace-nowrap cursor-pointer">
-                            <i data-lucide="users" class="w-3.5 h-3.5"></i>
-                            <span>Portal Semakan Yuran</span>
-                        </button>
-                        <button id="nav-treasurer" onclick="requestView('treasurer')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-                            <span>Dashboard Bendahari</span>
-                            <span id="lock-icon-treasurer" class="text-slate-400"><i data-lucide="lock" class="w-3 h-3"></i></span>
-                        </button>
-                        <button id="nav-admin" onclick="requestView('admin')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer">
-                            <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-                            <span>Tetapan Admin</span>
-                            <span id="lock-icon-admin" class="text-slate-400"><i data-lucide="lock" class="w-3 h-3"></i></span>
-                        </button>
-                    </nav>
+                    <!-- Official Pill Badge: Bendahari -->
+                    <div class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-sky-50 text-blue-900 border border-blue-200 shadow-2xs max-w-full">
+                        <i data-lucide="badge-check" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                        <span class="truncate">Bendahari: <strong id="header-treasurer-name" class="text-blue-800">Cikgu Hajah Rohana binti Ismail</strong></span>
+                    </div>
                 </div>
             </div>
+
+            <!-- Baris 2: Bar Navigasi Utama (3 Tab Berasingan dengan Ruang Lega) -->
+            <div class="py-2.5 border-t border-slate-100 flex items-center justify-between gap-3">
+                <nav class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 overflow-x-auto w-full sm:w-auto">
+                    <button id="nav-portal" onclick="requestView('portal')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-xs whitespace-nowrap cursor-pointer">
+                        <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                        <span>Portal Semakan Yuran</span>
+                    </button>
+                    <button id="nav-treasurer" onclick="requestView('treasurer')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>Dashboard Bendahari</span>
+                        <span id="lock-icon-treasurer" class="text-slate-400"><i data-lucide="lock" class="w-3 h-3"></i></span>
+                    </button>
+                    <button id="nav-admin" onclick="requestView('admin')" class="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer">
+                        <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+                        <span>Tetapan Admin</span>
+                        <span id="lock-icon-admin" class="text-slate-400"><i data-lucide="lock" class="w-3 h-3"></i></span>
+                    </button>
+                </nav>
+            </div>
+
         </div>
     </header>
 
     <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none no-print"></div>
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none no-print max-w-md"></div>
 
     <!-- =====================================================================
          2. VIEW 1: PORTAL SEMAKAN YURAN (DEFAULT PUBLIC VIEW - TANPA LOG MASUK)
@@ -173,8 +174,8 @@
         
         <!-- Clean Blue Gradient Hero Banner -->
         <section class="bg-gradient-to-r from-blue-900 via-blue-700 to-blue-600 text-white p-5 sm:p-6 rounded-2xl shadow-md space-y-5">
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                <div class="space-y-1.5 max-w-2xl">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+                <div class="space-y-1.5 max-w-xl">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white/15 text-sky-100 border border-white/25 uppercase tracking-wider">
                         <i data-lucide="check-square" class="w-3 h-3"></i>
                         Semakan Rasmi Ahli • Sesi <span id="portal-banner-year">2026</span>
@@ -432,7 +433,7 @@
                 </section>
 
                 <!-- Right (1 Col): DuitNow QR Pembayaran Yuran Card -->
-                <aside class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden sticky top-24">
+                <aside class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden sticky top-32">
                     <div class="bg-gradient-to-r from-pink-700 via-pink-600 to-blue-700 px-5 py-3.5 text-white flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <i data-lucide="qr-code" class="w-5 h-5"></i>
@@ -743,17 +744,20 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-xs font-semibold text-slate-700">URL Web App Google Apps Script</label>
+                        <label class="block text-xs font-semibold text-slate-700">URL Web App Google Apps Script (mesti berakhir dengan <code class="text-blue-700 font-bold">/exec</code>)</label>
                         <input type="url" id="admin-apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600">
                         <p class="text-[11px] text-slate-500 leading-relaxed">
-                            Tip GitHub Pages: Untuk kegunaan umum semua cikgu, tampalkan juga URL ini pada pemboleh ubah <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-700 font-bold">DEFAULT_APPS_SCRIPT_URL</code> di bahagian atas kod <code class="px-1 py-0.5 bg-slate-100 rounded">index.html</code> sebelum muat naik ke GitHub.
+                            Tip GitHub Pages: Tampalkan URL ini pada <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-700 font-bold">DEFAULT_APPS_SCRIPT_URL</code> dalam kod <code class="px-1 py-0.5 bg-slate-100 rounded">index.html</code> sebelum muat naik ke GitHub.
                         </p>
                     </div>
+
+                    <!-- Live Diagnostic Message Box -->
+                    <div id="admin-cloud-diagnostic-box" class="hidden p-3 rounded-xl text-[11px] leading-relaxed border"></div>
 
                     <div class="flex flex-wrap items-center gap-2 pt-1">
                         <button type="button" onclick="saveAppsScriptUrlFromAdmin()" class="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-3.5 rounded-xl shadow-2xs transition-colors cursor-pointer">
                             <i data-lucide="link" class="w-3.5 h-3.5"></i>
-                            <span>Simpan & Segerak Cloud</span>
+                            <span>Simpan & Uji Sambungan</span>
                         </button>
                         <button type="button" onclick="fetchFromCloud(true)" class="inline-flex items-center justify-center gap-1.5 bg-sky-50 hover:bg-sky-100 text-blue-800 border border-blue-200 text-xs font-semibold py-2 px-3 rounded-xl transition-colors cursor-pointer">
                             <i data-lucide="download-cloud" class="w-3.5 h-3.5"></i>
@@ -1936,6 +1940,7 @@
         let allDirStatusFilter = 'ALL';
         let pendingDeleteMemberId = null;
         let cloudSyncTimer = null;
+        let lastCloudDiagnostic = 'Belum disambungkan ke Google Sheets. Sistem menggunakan storan pelayar tempatan.';
 
         function getActiveScriptUrl() {
             const hardcoded = (DEFAULT_APPS_SCRIPT_URL || '').trim();
@@ -1943,45 +1948,66 @@
             return (state.appsScriptUrl || '').trim();
         }
 
-        function setCloudSyncIndicator(status, label) {
+        function setCloudSyncIndicator(status, label, detailMsg = '') {
             const badge = document.getElementById('cloud-sync-badge');
             const dot = document.getElementById('cloud-sync-dot');
             const text = document.getElementById('cloud-sync-text');
             const refreshBtn = document.getElementById('btn-manual-refresh');
             const adminPill = document.getElementById('admin-cloud-status-pill');
+            const diagBox = document.getElementById('admin-cloud-diagnostic-box');
+
+            if (detailMsg) {
+                lastCloudDiagnostic = detailMsg;
+            }
 
             if (!badge) return;
             text.textContent = label;
 
             if (status === 'local') {
-                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap';
+                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap cursor-pointer';
                 dot.className = 'w-2 h-2 rounded-full bg-slate-400';
                 if (refreshBtn) refreshBtn.classList.add('hidden');
                 if (adminPill) {
                     adminPill.textContent = 'Mod Tempatan';
                     adminPill.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200';
                 }
+                if (diagBox) diagBox.classList.add('hidden');
             } else if (status === 'syncing') {
-                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-sky-50 text-blue-700 border border-blue-200 whitespace-nowrap';
+                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-sky-50 text-blue-700 border border-blue-200 whitespace-nowrap cursor-pointer';
                 dot.className = 'w-2 h-2 rounded-full bg-blue-600 animate-ping';
                 if (refreshBtn) refreshBtn.classList.remove('hidden');
             } else if (status === 'connected') {
-                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap';
+                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap cursor-pointer';
                 dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
                 if (refreshBtn) refreshBtn.classList.remove('hidden');
                 if (adminPill) {
                     adminPill.textContent = 'Terhubung (Live)';
                     adminPill.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300';
                 }
+                if (diagBox && detailMsg) {
+                    diagBox.className = 'p-3 rounded-xl text-[11px] leading-relaxed border bg-emerald-50 border-emerald-200 text-emerald-900 font-medium';
+                    diagBox.textContent = detailMsg;
+                    diagBox.classList.remove('hidden');
+                }
             } else if (status === 'error') {
-                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap';
+                badge.className = 'inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap cursor-pointer';
                 dot.className = 'w-2 h-2 rounded-full bg-rose-500';
                 if (refreshBtn) refreshBtn.classList.remove('hidden');
                 if (adminPill) {
                     adminPill.textContent = 'Ralat Sambungan';
                     adminPill.className = 'text-[10px] font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300';
                 }
+                if (diagBox && detailMsg) {
+                    diagBox.className = 'p-3 rounded-xl text-[11px] leading-relaxed border bg-rose-50 border-rose-200 text-rose-900 font-medium';
+                    diagBox.textContent = detailMsg;
+                    diagBox.classList.remove('hidden');
+                }
             }
+        }
+
+        function showCloudDiagnosticToast() {
+            const isConnected = document.getElementById('cloud-sync-text').textContent.includes('Live');
+            showToast(lastCloudDiagnostic, isConnected ? 'success' : 'info');
         }
 
         function loadState() {
@@ -2028,10 +2054,40 @@
             }
         }
 
+        function validateAppsScriptUrl(url) {
+            if (!url) return { valid: false, reason: 'URL kosong.' };
+            if (!url.startsWith('https://script.google.com/macros/s/')) {
+                return {
+                    valid: false,
+                    reason: 'Format URL tidak sah! Pastikan anda menyalin Web App URL yang bermula dengan "https://script.google.com/macros/s/..." dan berakhir dengan "/exec" (bukan URL Google Sheet atau URL editor).'
+                };
+            }
+            if (url.endsWith('/dev')) {
+                return {
+                    valid: false,
+                    reason: 'Anda menyalin URL ujian (/dev). Sila gunakan URL Web App rasmi yang berakhir dengan "/exec" selepas menekan Deploy -> New deployment.'
+                };
+            }
+            if (!url.includes('/exec')) {
+                return {
+                    valid: false,
+                    reason: 'URL Web App mesti berakhir dengan "/exec". Sila semak semula pautan daripada tetingkap Deploy di Apps Script.'
+                };
+            }
+            return { valid: true };
+        }
+
         async function fetchFromCloud(showSuccessToast = false) {
             const url = getActiveScriptUrl();
             if (!url) {
-                setCloudSyncIndicator('local', 'Mod Tempatan');
+                setCloudSyncIndicator('local', 'Mod Tempatan', 'Mod Tempatan aktif. Masukkan URL Google Apps Script di Tetapan Admin untuk penyegerakan masa nyata.');
+                return;
+            }
+
+            const check = validateAppsScriptUrl(url);
+            if (!check.valid) {
+                setCloudSyncIndicator('error', 'URL Tidak Sah', check.reason);
+                if (showSuccessToast) showToast(check.reason, 'error');
                 return;
             }
 
@@ -2042,7 +2098,17 @@
                     method: 'GET',
                     redirect: 'follow'
                 });
-                const data = await response.json();
+
+                const rawText = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (parseErr) {
+                    const msg = 'Apps Script memulangkan halaman HTML (bukan JSON). Pastikan tetapan Deploy -> "Who has access" dipilih kepada "Anyone" (Sesiapa sahaja), bukan "Only myself".';
+                    setCloudSyncIndicator('error', 'Akses Disekat', msg);
+                    if (showSuccessToast) showToast(msg, 'error');
+                    return;
+                }
 
                 if (data && data.status === 'ok') {
                     if (data.hasData && data.payload) {
@@ -2061,25 +2127,22 @@
                         }
                         saveState(true);
                         syncAllViews();
-                        setCloudSyncIndicator('connected', 'Live Google Sheets');
+                        setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya berhubung & menyegerakkan data terkini daripada Google Sheets.');
                         if (showSuccessToast) {
                             showToast('Data terkini berjaya disegerakkan daripada Google Sheets!', 'success');
                         }
                     } else {
-                        // First time connecting to an empty Google Sheet: initialize cloud with current data
                         await pushToCloud(showSuccessToast);
                     }
                 } else {
-                    setCloudSyncIndicator('error', 'Ralat Segerak');
-                    if (showSuccessToast) {
-                        showToast('Gagal membaca data daripada Google Apps Script.', 'error');
-                    }
+                    const errMsg = `Ralat skrip Google Sheets: ${(data && data.message) || 'Tidak diketahui'}`;
+                    setCloudSyncIndicator('error', 'Ralat Skrip', errMsg);
+                    if (showSuccessToast) showToast(errMsg, 'error');
                 }
             } catch (err) {
-                setCloudSyncIndicator('error', 'Luar Talian');
-                if (showSuccessToast) {
-                    showToast('Tidak dapat menghubungi pautan Google Apps Script. Semak sambungan atau tetapan akses "Anyone".', 'error');
-                }
+                const msg = 'Sambungan ke Google Apps Script disekat oleh pelayar (CORS / Akses). Sila pastikan di Apps Script: Deploy -> Manage deployments -> Who has access = "Anyone", dan cipta "New version".';
+                setCloudSyncIndicator('error', 'Ralat Cloud', msg);
+                if (showSuccessToast) showToast(msg, 'error');
             }
         }
 
@@ -2087,40 +2150,77 @@
             const url = getActiveScriptUrl();
             if (!url) return;
 
-            setCloudSyncIndicator('syncing', 'Menyimpan ke Cloud...');
-            try {
-                const { members, customLogoDataUrl, qrImage, ...configOnly } = state;
-                const bodyPayload = {
-                    action: 'save',
-                    payload: {
-                        config: configOnly,
-                        members: members,
-                        logo: customLogoDataUrl || '',
-                        qr: qrImage || ''
-                    }
-                };
+            const check = validateAppsScriptUrl(url);
+            if (!check.valid) {
+                setCloudSyncIndicator('error', 'URL Tidak Sah', check.reason);
+                return;
+            }
 
-                // Use text/plain to avoid CORS preflight issues with Google Apps Script
+            setCloudSyncIndicator('syncing', 'Menyimpan...');
+            const { members, customLogoDataUrl, qrImage, ...configOnly } = state;
+            const bodyPayload = {
+                action: 'save',
+                payload: {
+                    config: configOnly,
+                    members: members,
+                    logo: customLogoDataUrl || '',
+                    qr: qrImage || ''
+                }
+            };
+            const serialized = JSON.stringify(bodyPayload);
+
+            try {
                 const response = await fetch(url, {
                     method: 'POST',
                     redirect: 'follow',
                     headers: {
                         'Content-Type': 'text/plain;charset=utf-8'
                     },
-                    body: JSON.stringify(bodyPayload)
+                    body: serialized
                 });
-                const data = await response.json();
+                const rawText = await response.text();
+                const data = JSON.parse(rawText);
 
                 if (data && data.status === 'ok') {
-                    setCloudSyncIndicator('connected', 'Live Google Sheets');
+                    setCloudSyncIndicator('connected', 'Live Google Sheets', `Semua perubahan berjaya disimpan ke Google Sheets (${data.updatedAt || 'Terkini'}).`);
                     if (showSuccessToast) {
                         showToast('Semua data berjaya disegerakkan ke Google Sheets secara real-time!', 'success');
                     }
+                    return;
                 } else {
-                    setCloudSyncIndicator('error', 'Ralat Simpan');
+                    const errMsg = `Gagal menyimpan ke Google Sheets: ${(data && data.message) || 'Ralat tidak diketahui'}`;
+                    setCloudSyncIndicator('error', 'Ralat Simpan', errMsg);
+                    if (showSuccessToast) showToast(errMsg, 'error');
+                    return;
                 }
             } catch (err) {
-                setCloudSyncIndicator('error', 'Ralat Cloud');
+                try {
+                    await fetch(url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8'
+                        },
+                        body: serialized
+                    });
+                    await new Promise(r => setTimeout(r, 1200));
+                    const sep = url.includes('?') ? '&' : '?';
+                    const verifyRes = await fetch(`${url}${sep}action=load&t=${Date.now()}`, { method: 'GET', redirect: 'follow' });
+                    const verifyData = JSON.parse(await verifyRes.text());
+                    if (verifyData && verifyData.status === 'ok') {
+                        setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya disimpan ke Google Sheets (disahkan melalui mod keserasian pelayar).');
+                        if (showSuccessToast) {
+                            showToast('Data berjaya disimpan dan disegerakkan ke Google Sheets!', 'success');
+                        }
+                        return;
+                    }
+                } catch (fallbackErr) {
+                    // Genuine connection / permission error
+                }
+
+                const msg = 'Ralat Cloud: Pelayar gagal menghantar data ke Google Apps Script. Pastikan "Who has access" ditetapkan kepada "Anyone" dan gunakan URL "/exec".';
+                setCloudSyncIndicator('error', 'Ralat Cloud', msg);
+                if (showSuccessToast) showToast(msg, 'error');
             }
         }
 
@@ -2129,8 +2229,8 @@
             state.appsScriptUrl = inputVal;
             saveState(true);
             if (!inputVal) {
-                setCloudSyncIndicator('local', 'Mod Tempatan');
-                showToast('Pautan Google Apps Script dikosongkan. Sistem kembali ke Mod Tempatan.', 'info');
+                setCloudSyncIndicator('local', 'Mod Tempatan', 'Pautan Google Apps Script dikosongkan. Sistem kembali ke Mod Tempatan.');
+                showToast('Pautan Google Apps Script dikosongkan.', 'info');
                 return;
             }
             fetchFromCloud(true);
@@ -2422,10 +2522,10 @@
                 const navBtn = document.getElementById(`nav-${v}`);
                 if (v === viewName) {
                     el.classList.remove('hidden');
-                    navBtn.className = "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-xs whitespace-nowrap cursor-pointer";
+                    navBtn.className = "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-xs whitespace-nowrap cursor-pointer";
                 } else {
                     el.classList.add('hidden');
-                    navBtn.className = "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer";
+                    navBtn.className = "flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-blue-700 transition-all whitespace-nowrap cursor-pointer";
                 }
             });
             syncAllViews();
@@ -4027,9 +4127,9 @@
                 ? 'bg-slate-900 text-white border-slate-700'
                 : (type === 'error' ? 'bg-rose-600 text-white border-rose-500' : 'bg-blue-800 text-white border-blue-700');
 
-            toast.className = `${styles} border px-4 py-3 rounded-xl shadow-lg text-xs font-medium flex items-center gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto`;
+            toast.className = `${styles} border px-4 py-3 rounded-xl shadow-lg text-xs font-medium flex items-start gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto leading-relaxed`;
             toast.innerHTML = `
-                <span class="w-2 h-2 rounded-full ${type === 'success' ? 'bg-sky-400' : 'bg-amber-300'}"></span>
+                <span class="w-2 h-2 rounded-full mt-1 shrink-0 ${type === 'success' ? 'bg-sky-400' : 'bg-amber-300'}"></span>
                 <span>${message}</span>
             `;
             container.appendChild(toast);
@@ -4038,7 +4138,7 @@
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
                 setTimeout(() => toast.remove(), 300);
-            }, 3400);
+            }, 4500);
         }
 
         // Boot Application on Load
