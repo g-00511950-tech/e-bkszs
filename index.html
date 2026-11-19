@@ -182,26 +182,30 @@
                     </span>
                     <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight">Portal Semakan Yuran</h2>
                     <p class="text-xs sm:text-sm text-blue-100 leading-relaxed">
-                        Semak status pembayaran yuran tahunan Badan Kebajikan Guru & Staf serta rekod transaksi bulanan anda secara terus.
+                        Semak status pembayaran yuran bulanan serta kutipan program atau bayaran lain-lain Badan Kebajikan Guru & Staf secara terus.
                     </p>
                 </div>
 
-                <!-- Two Sub-Tabs inside Portal Semakan Yuran -->
-                <div class="flex flex-col sm:flex-row bg-blue-950/45 p-1.5 rounded-xl border border-blue-400/30 gap-1.5 shrink-0">
-                    <button id="subtab-btn-all" onclick="switchPortalSubTab('all')" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-800 shadow-xs cursor-pointer">
+                <!-- Three Sub-Tabs inside Portal Semakan Yuran -->
+                <div class="flex flex-col sm:flex-row flex-wrap bg-blue-950/45 p-1.5 rounded-xl border border-blue-400/30 gap-1.5 shrink-0">
+                    <button id="subtab-btn-all" onclick="switchPortalSubTab('all')" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-800 shadow-xs cursor-pointer">
                         <i data-lucide="list-checks" class="w-4 h-4 text-blue-600"></i>
-                        <span>Senarai Status Semua Guru & Staf</span>
+                        <span>Status Yuran Bulanan</span>
                     </button>
-                    <button id="subtab-btn-individual" onclick="switchPortalSubTab('individual')" class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
+                    <button id="subtab-btn-individual" onclick="switchPortalSubTab('individual')" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
                         <i data-lucide="user-check" class="w-4 h-4"></i>
-                        <span>Semakan Rekod Individu & Bayaran</span>
+                        <span>Rekod Individu & QR</span>
+                    </button>
+                    <button id="subtab-btn-programs" onclick="switchPortalSubTab('programs')" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
+                        <i data-lucide="calendar-heart" class="w-4 h-4"></i>
+                        <span>Kutipan Program / Lain-Lain</span>
                     </button>
                 </div>
             </div>
         </section>
 
         <!-- =================================================================
-             SUB-TAB 1 (ACTIVE BY DEFAULT): SENARAI STATUS SEMUA GURU & STAF
+             SUB-TAB 1 (ACTIVE BY DEFAULT): SENARAI STATUS YURAN BULANAN
         ================================================================== -->
         <div id="portal-subtab-all" class="space-y-5">
             
@@ -373,7 +377,7 @@
                 <!-- Financial Summary Metrics -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5">
                     <div class="bg-sky-50/80 border border-blue-200/80 p-4 rounded-xl">
-                        <span class="text-xs font-semibold text-blue-900 block">Jumlah Dibayar</span>
+                        <span class="text-xs font-semibold text-blue-900 block">Jumlah Yuran Bulanan Dibayar</span>
                         <div class="flex items-baseline justify-between mt-1">
                             <span id="portal-total-paid" class="text-2xl font-extrabold text-blue-700">RM 0.00</span>
                             <span id="portal-paid-count" class="text-xs font-semibold text-blue-800 bg-blue-100 px-2.5 py-0.5 rounded-full">0 Bulan</span>
@@ -381,7 +385,7 @@
                     </div>
 
                     <div class="bg-rose-50/70 border border-rose-200/80 p-4 rounded-xl">
-                        <span class="text-xs font-semibold text-rose-800 block">Baki Tunggakan</span>
+                        <span class="text-xs font-semibold text-rose-800 block">Baki Tunggakan Yuran Bulanan</span>
                         <div class="flex items-baseline justify-between mt-1">
                             <span id="portal-total-due" class="text-2xl font-extrabold text-rose-600">RM 0.00</span>
                             <span id="portal-due-count" class="text-xs font-semibold text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full">0 Bulan</span>
@@ -398,39 +402,74 @@
                 </div>
             </section>
 
-            <!-- Grid: Left Full Jan-Dec Monthly Schedule Table + Right DuitNow QR Card -->
+            <!-- Grid: Left Full Jan-Dec Monthly Schedule + Individual Program Status | Right DuitNow QR Card -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 
-                <!-- Left (2 Cols): Full Jan-Dec Monthly Payment Schedule Table -->
-                <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-                    <div class="px-5 py-4 bg-sky-50/60 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                            <h3 class="text-base font-bold text-slate-900">Jadual Pembayaran Bulanan (<span id="portal-schedule-year">2026</span>)</h3>
-                            <p class="text-xs text-slate-500">Rekod status, kaedah pembayaran, dan tarikh bagi setiap bulan</p>
+                <!-- Left (2 Cols) -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- 1. Full Jan-Dec Monthly Payment Schedule Table -->
+                    <section class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                        <div class="px-5 py-4 bg-sky-50/60 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900">Jadual Pembayaran Bulanan (<span id="portal-schedule-year">2026</span>)</h3>
+                                <p class="text-xs text-slate-500">Rekod status, kaedah pembayaran, dan tarikh bagi setiap bulan</p>
+                            </div>
+                            <button onclick="switchPortalSubTab('all')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white px-3 py-1.5 rounded-lg border border-blue-200 self-start sm:self-center cursor-pointer transition-colors">
+                                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                                <span>Kembali ke Senarai Semua</span>
+                            </button>
                         </div>
-                        <button onclick="switchPortalSubTab('all')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-white px-3 py-1.5 rounded-lg border border-blue-200 self-start sm:self-center cursor-pointer transition-colors">
-                            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
-                            <span>Kembali ke Senarai Semua</span>
-                        </button>
-                    </div>
 
-                    <div class="overflow-x-auto custom-scrollbar">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
-                                    <th class="py-3 px-4">Bulan</th>
-                                    <th class="py-3 px-3 text-right">Kadar Yuran</th>
-                                    <th class="py-3 px-3 text-center">Status</th>
-                                    <th class="py-3 px-3 text-center">Kaedah Bayaran</th>
-                                    <th class="py-3 px-4 text-right">Tarikh Bayaran</th>
-                                </tr>
-                            </thead>
-                            <tbody id="portal-schedule-tbody" class="divide-y divide-slate-100 text-xs sm:text-sm">
-                                <!-- Dynamic 12-Month Rows Injected Here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                        <th class="py-3 px-4">Bulan</th>
+                                        <th class="py-3 px-3 text-right">Kadar Yuran</th>
+                                        <th class="py-3 px-3 text-center">Status</th>
+                                        <th class="py-3 px-3 text-center">Kaedah Bayaran</th>
+                                        <th class="py-3 px-4 text-right">Tarikh Bayaran</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portal-schedule-tbody" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                    <!-- Dynamic 12-Month Rows Injected Here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- 2. Individual One-Off Program / Misc Payments Status Card -->
+                    <section class="bg-white rounded-2xl border border-indigo-200 shadow-xs overflow-hidden">
+                        <div class="px-5 py-4 bg-indigo-50/70 border-b border-indigo-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <h3 class="text-base font-bold text-indigo-950 flex items-center gap-2">
+                                    <i data-lucide="calendar-heart" class="w-4 h-4 text-indigo-600"></i>
+                                    <span>Status Kutipan Program & Bayaran Lain-Lain</span>
+                                </h3>
+                                <p class="text-xs text-slate-500">Rekod bayaran sekali gus (one-off) bagi program khas sekolah</p>
+                            </div>
+                            <button onclick="switchPortalSubTab('programs')" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 hover:text-indigo-900 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 self-start sm:self-center cursor-pointer transition-colors">
+                                <span>Senarai Penuh Program</span>
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600 uppercase tracking-wider">
+                                        <th class="py-3 px-4">Nama Program / Kutipan</th>
+                                        <th class="py-3 px-3 text-right">Amaun (RM)</th>
+                                        <th class="py-3 px-3 text-center">Status</th>
+                                        <th class="py-3 px-4 text-right">Kaedah & Tarikh</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="portal-individual-programs-tbody" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
 
                 <!-- Right (1 Col): DuitNow QR Pembayaran Yuran Card -->
                 <aside class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden sticky top-32">
@@ -444,17 +483,17 @@
 
                     <div class="p-5 flex flex-col items-center text-center space-y-4">
                         <p class="text-xs text-slate-600 leading-relaxed">
-                            Imbas kod DuitNow QR di bawah menggunakan aplikasi perbankan atau e-Wallet untuk membuat bayaran yuran, kemudian hantar bukti resit kepada Bendahari.
+                            Imbas kod DuitNow QR di bawah menggunakan aplikasi perbankan atau e-Wallet untuk membuat bayaran yuran atau kutipan program, kemudian hantar bukti resit kepada Bendahari.
                         </p>
 
-                        <!-- Dynamic DuitNow QR Frame (Supports Custom Uploaded QR Image or Default Vector QR) -->
+                        <!-- Dynamic DuitNow QR Frame -->
                         <div class="w-full max-w-[230px] bg-gradient-to-b from-pink-50/70 to-white p-3.5 rounded-2xl border-2 border-pink-500 shadow-xs space-y-2">
                             <div class="flex items-center justify-center gap-1.5 text-[11px] font-extrabold text-pink-700 tracking-wider uppercase">
                                 <span class="w-2 h-2 rounded-full bg-pink-600"></span>
                                 <span>DuitNow QR</span>
                             </div>
                             <div id="portal-qr-display-box" class="bg-white p-2 rounded-xl border border-pink-100 flex items-center justify-center min-h-[176px]">
-                                <!-- Rendered via JS: Custom QR Image or Default SVG -->
+                                <!-- Rendered via JS -->
                             </div>
                             <button type="button" onclick="openQrZoomModal()" class="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-800 border border-pink-200 text-[11px] font-bold transition-colors cursor-pointer">
                                 <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
@@ -488,6 +527,126 @@
                 </aside>
             </div>
         </div>
+
+        <!-- =================================================================
+             SUB-TAB 3 (NEW): KUTIPAN PROGRAM / BAYARAN LAIN-LAIN (PUBLIC VIEW)
+        ================================================================== -->
+        <div id="portal-subtab-programs" class="hidden space-y-5">
+            
+            <!-- Program Selector & Details Banner -->
+            <section class="bg-white p-5 rounded-2xl border border-indigo-200 shadow-xs space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="flex-1 max-w-xl">
+                        <label for="portal-program-select" class="block text-xs font-bold text-indigo-950 uppercase tracking-wider mb-1.5">
+                            Pilih Kategori Program / Kutipan Khas
+                        </label>
+                        <select id="portal-program-select" onchange="renderPortalProgramsView()" class="w-full px-4 py-2.5 text-sm font-bold bg-indigo-50/70 border border-indigo-200 text-indigo-950 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer">
+                            <!-- Options injected via JS -->
+                        </select>
+                    </div>
+
+                    <div id="portal-program-meta-box" class="flex flex-wrap items-center gap-2.5 bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 text-xs">
+                        <!-- Program rates, due date & status badge injected via JS -->
+                    </div>
+                </div>
+                <p id="portal-program-notes" class="text-xs text-slate-600 bg-sky-50/60 px-3.5 py-2.5 rounded-xl border border-blue-100 hidden"></p>
+            </section>
+
+            <!-- 4 Summary Cards for Selected Program -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">Jumlah Ahli Terlibat</span>
+                        <span id="portal-prog-total-members" class="text-2xl font-extrabold text-slate-800 mt-0.5 block">0 Orang</span>
+                    </div>
+                    <div class="p-2.5 bg-slate-100 text-slate-700 rounded-xl">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">Sudah Bayar</span>
+                        <span id="portal-prog-paid-count" class="text-2xl font-extrabold text-emerald-600 mt-0.5 block">0 Orang</span>
+                    </div>
+                    <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100">
+                        <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">Belum Bayar</span>
+                        <span id="portal-prog-unpaid-count" class="text-2xl font-extrabold text-rose-600 mt-0.5 block">0 Orang</span>
+                    </div>
+                    <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl border border-rose-100">
+                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold text-slate-500 block">Peratusan Selesai</span>
+                        <span id="portal-prog-pct" class="text-2xl font-extrabold text-indigo-700 mt-0.5 block">0%</span>
+                    </div>
+                    <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100">
+                        <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search & Status Filter for Portal Program View -->
+            <section class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+                    <div class="relative flex-1 max-w-md">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="portal-prog-search" onkeyup="renderPortalProgramsView()" placeholder="Cari nama guru atau staf..." class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white">
+                    </div>
+
+                    <select id="portal-prog-category" onchange="renderPortalProgramsView()" class="px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium text-slate-700 cursor-pointer">
+                        <option value="ALL">Semua Kategori (Guru & AKP)</option>
+                        <option value="Guru">Guru</option>
+                        <option value="AKP">AKP</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-1.5 bg-indigo-50/70 p-1.5 rounded-xl border border-indigo-100">
+                    <button onclick="setPortalProgStatusFilter('ALL')" data-pstatus="ALL" class="portal-prog-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-2xs transition-all cursor-pointer">
+                        Semua
+                    </button>
+                    <button onclick="setPortalProgStatusFilter('PAID')" data-pstatus="PAID" class="portal-prog-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-700 transition-all cursor-pointer">
+                        Sudah Bayar
+                    </button>
+                    <button onclick="setPortalProgStatusFilter('UNPAID')" data-pstatus="UNPAID" class="portal-prog-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-700 transition-all cursor-pointer">
+                        Belum Bayar
+                    </button>
+                </div>
+            </section>
+
+            <!-- Public Table for Program Payments -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-50/70 border-b border-slate-200 text-xs font-bold text-indigo-950 uppercase tracking-wider">
+                                <th class="py-3.5 px-4 w-12 text-center">Bil</th>
+                                <th class="py-3.5 px-4 min-w-[230px]">Nama & Kategori</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Kadar Bayaran (RM)</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Status</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Kaedah Bayaran</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Tarikh Bayaran</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portal-programs-tbody" class="divide-y divide-slate-100 text-sm">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="portal-programs-empty" class="hidden py-12 text-center px-4">
+                    <p class="text-sm font-semibold text-slate-800">Tiada rekod program atau ahli sepadan dengan carian.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <!-- =====================================================================
@@ -495,7 +654,7 @@
     ====================================================================== -->
     <main id="view-treasurer" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 no-print">
         
-        <!-- Top Header Banner & Action Toolbar -->
+        <!-- Top Header Banner with Sub-Tab Switcher -->
         <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white p-5 rounded-2xl shadow-sm space-y-4">
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
@@ -504,7 +663,7 @@
                         <span id="treasurer-rate-badge" class="text-xs text-blue-100 font-medium">Kadar Yuran: Guru RM 15.00 • AKP RM 10.00 / bulan</span>
                     </div>
                     <h2 class="text-lg sm:text-xl font-bold mt-1">Dashboard Bendahari & Kemas Kini Pembayaran</h2>
-                    <p class="text-xs text-blue-100 mt-0.5">Klik mana-mana petak bulan untuk kemas kini status & kaedah bayaran (Tunai / DuitNow QR / Online Transfer), atau eksport laporan ke Excel (.xlsx).</p>
+                    <p class="text-xs text-blue-100 mt-0.5">Urus kutipan yuran bulanan serta kutipan program khas / bayaran lain-lain secara masa nyata.</p>
                 </div>
 
                 <button onclick="logoutRole('treasurer')" class="self-start lg:self-center flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl border border-rose-500 shadow-xs transition-colors cursor-pointer shrink-0">
@@ -513,169 +672,328 @@
                 </button>
             </div>
 
-            <!-- Top Action Toolbar -->
-            <div class="pt-3 border-t border-white/15 flex flex-wrap items-center gap-2.5">
-                <button onclick="openBulkPaymentModal()" class="flex items-center gap-2 bg-white text-blue-800 hover:bg-sky-50 font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer">
-                    <i data-lucide="plus-circle" class="w-4 h-4 text-blue-600"></i>
-                    <span>+ Rekod Bayaran Pukal</span>
-                </button>
-
-                <button onclick="openMemberUpdaterModal(null)" class="flex items-center gap-2 bg-blue-950/60 hover:bg-blue-950 text-sky-100 border border-sky-300/40 font-bold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">
-                    <i data-lucide="sliders-horizontal" class="w-4 h-4 text-sky-300"></i>
-                    <span>Kemas Kini Status Ahli</span>
-                </button>
-
-                <button onclick="exportToExcelXLSX()" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/50 font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer">
-                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-                    <span>Eksport Excel (.xlsx)</span>
-                </button>
-
-                <button onclick="printBendahariSummaryReport()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-semibold text-xs px-4 py-2.5 rounded-xl transition-all cursor-pointer">
-                    <i data-lucide="printer" class="w-4 h-4"></i>
-                    <span>Cetak Laporan</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- 4 Dynamic Statistic Cards -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Card 1: Jumlah Kutipan Semasa (RM) -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Jumlah Kutipan Semasa</span>
-                    <div class="p-2 bg-blue-50 text-blue-600 rounded-xl">
-                        <i data-lucide="banknote" class="w-5 h-5"></i>
-                    </div>
+            <!-- Sub-Tab Switcher inside Dashboard Bendahari -->
+            <div class="pt-3 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex flex-col sm:flex-row bg-blue-950/50 p-1 rounded-xl border border-blue-400/30 gap-1.5">
+                    <button id="treasurer-subtab-btn-monthly" onclick="switchTreasurerSubTab('monthly')" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-blue-900 shadow-xs cursor-pointer">
+                        <i data-lucide="calendar-range" class="w-4 h-4 text-blue-600"></i>
+                        <span>Yuran Bulanan (Jan–Dis)</span>
+                    </button>
+                    <button id="treasurer-subtab-btn-programs" onclick="switchTreasurerSubTab('programs')" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
+                        <i data-lucide="calendar-heart" class="w-4 h-4"></i>
+                        <span>Kutipan Program / Bayaran Lain-Lain</span>
+                    </button>
                 </div>
-                <h3 id="stat-collected" class="text-2xl font-extrabold text-slate-900 mt-3">RM 0.00</h3>
-                <p id="stat-collected-sub" class="text-xs text-blue-600 font-medium mt-1.5">0 bulan yuran dikreditkan</p>
-            </div>
 
-            <!-- Card 2: Baki Tunggakan (RM) -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Baki Tunggakan</span>
-                    <div class="p-2 bg-rose-50 text-rose-600 rounded-xl">
-                        <i data-lucide="alert-circle" class="w-5 h-5"></i>
-                    </div>
-                </div>
-                <h3 id="stat-arrears" class="text-2xl font-extrabold text-rose-600 mt-3">RM 0.00</h3>
-                <p id="stat-arrears-sub" class="text-xs text-slate-500 mt-1.5">Melibatkan 0 orang ahli</p>
-            </div>
+                <!-- Monthly Toolbar Buttons (Shown when monthly sub-tab is active) -->
+                <div id="treasurer-monthly-toolbar" class="flex flex-wrap items-center gap-2">
+                    <button onclick="openBulkPaymentModal()" class="flex items-center gap-1.5 bg-white text-blue-800 hover:bg-sky-50 font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-blue-600"></i>
+                        <span>+ Bayaran Pukal</span>
+                    </button>
 
-            <!-- Card 3: Peratusan Kutipan -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Peratusan Kutipan</span>
-                    <div class="p-2 bg-sky-50 text-blue-600 rounded-xl">
-                        <i data-lucide="trending-up" class="w-5 h-5"></i>
-                    </div>
-                </div>
-                <div class="flex items-baseline justify-between mt-3">
-                    <h3 id="stat-collection-pct" class="text-2xl font-extrabold text-blue-700">0%</h3>
-                    <span id="stat-collection-ratio" class="text-xs font-semibold text-slate-500">0 / 0 Bulan</span>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-2.5 mt-2.5 overflow-hidden">
-                    <div id="stat-collection-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-            </div>
+                    <button onclick="openMemberUpdaterModal(null)" class="flex items-center gap-1.5 bg-blue-950/60 hover:bg-blue-950 text-sky-100 border border-sky-300/40 font-bold text-xs px-3.5 py-2 rounded-xl transition-all cursor-pointer">
+                        <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-sky-300"></i>
+                        <span>Kemas Kini Ahli</span>
+                    </button>
 
-            <!-- Card 4: Status Ahli -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-                <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Status Ahli</span>
-                    <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
-                        <i data-lucide="pie-chart" class="w-5 h-5"></i>
-                    </div>
-                </div>
-                <h3 id="stat-member-breakdown" class="text-base sm:text-lg font-extrabold text-slate-900 mt-3 leading-snug">0 Lunas • 0 Ansuran • 0 Belum</h3>
-                <div class="flex items-center justify-between gap-2 mt-1.5">
-                    <p id="stat-member-total-sub" class="text-xs text-slate-500">Daripada 10 ahli berdaftar</p>
-                    <button type="button" onclick="quickFilterLumpsumInMatrix()" title="Klik untuk tapis pembayar Lumpsum (rekod anugerah/penghargaan)" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors cursor-pointer shrink-0">
-                        <i data-lucide="award" class="w-3 h-3"></i>
-                        <span id="stat-lumpsum-pill">0 Lumpsum</span>
+                    <button onclick="exportToExcelXLSX()" class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400/50 font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all cursor-pointer">
+                        <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                        <span>Eksport Excel</span>
+                    </button>
+
+                    <button onclick="printBendahariSummaryReport()" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white border border-white/25 font-semibold text-xs px-3.5 py-2 rounded-xl transition-all cursor-pointer">
+                        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                        <span>Cetak</span>
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Search & Filter Bar -->
-        <section class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-            <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
-                <div class="relative flex-1 min-w-[220px]">
-                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input type="text" id="matrix-search" onkeyup="renderTreasurerMatrix()" placeholder="Cari nama guru atau AKP..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white">
+        <!-- =================================================================
+             TREASURER SUB-TAB A: YURAN BULANAN (JAN-DIS)
+        ================================================================== -->
+        <div id="treasurer-subtab-monthly" class="space-y-6">
+            <!-- 4 Dynamic Statistic Cards -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Card 1: Jumlah Kutipan Semasa (RM) -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Jumlah Kutipan Semasa</span>
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                            <i data-lucide="banknote" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="stat-collected" class="text-2xl font-extrabold text-slate-900 mt-3">RM 0.00</h3>
+                    <p id="stat-collected-sub" class="text-xs text-blue-600 font-medium mt-1.5">0 bulan yuran dikreditkan</p>
                 </div>
 
-                <select id="matrix-filter-category" onchange="renderTreasurerMatrix()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium text-slate-700 cursor-pointer">
-                    <option value="ALL">Semua Kategori (Guru & AKP)</option>
-                    <option value="Guru">Guru Sahaja</option>
-                    <option value="AKP">AKP Sahaja</option>
-                </select>
-
-                <select id="matrix-filter-status" onchange="renderTreasurerMatrix()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium text-slate-700 cursor-pointer">
-                    <option value="ALL">Semua Status Bayaran</option>
-                    <option value="LUNAS">Lunas (Semua)</option>
-                    <option value="LUNAS_LUMPSUM">Lunas (Lumpsum Sahaja)</option>
-                    <option value="ANSURAN">Dalam Proses Ansuran</option>
-                    <option value="BELUM">Belum Lunas</option>
-                </select>
-            </div>
-
-            <!-- Legend -->
-            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-                <div class="flex flex-wrap items-center gap-4">
-                    <span class="font-semibold text-slate-700">Petunjuk Petak Bulan:</span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-[10px]">✓ Tunai / QR / Bank</span>
-                        Sudah Bayar (Klik untuk ubah)
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-6 h-6 rounded bg-rose-100 text-rose-700 border border-rose-200 inline-flex items-center justify-center font-bold">!</span>
-                        Belum Bayar
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-6 h-6 rounded bg-slate-100 text-slate-400 border border-slate-200 inline-flex items-center justify-center font-bold">-</span>
-                        Dikecualikan
-                    </span>
+                <!-- Card 2: Baki Tunggakan (RM) -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Baki Tunggakan</span>
+                        <div class="p-2 bg-rose-50 text-rose-600 rounded-xl">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="stat-arrears" class="text-2xl font-extrabold text-rose-600 mt-3">RM 0.00</h3>
+                    <p id="stat-arrears-sub" class="text-xs text-slate-500 mt-1.5">Melibatkan 0 orang ahli</p>
                 </div>
-                <span class="text-blue-700 font-semibold">Klik mana-mana petak bulan atau butang "Kemaskini" untuk ubah status & kaedah bayaran</span>
-            </div>
-        </section>
 
-        <!-- Jadual Matriks Pembayaran & Kemas Kini (Jan–Dis) -->
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-sky-50/80 border-b border-slate-200 text-xs font-bold text-blue-950 uppercase tracking-wider">
-                            <th class="py-3.5 px-4 sticky left-0 bg-sky-50 z-10 min-w-[225px] border-r border-slate-200">Nama Ahli & Kategori</th>
-                            <th class="py-3.5 px-3 text-center min-w-[140px]">Status</th>
-                            <th class="py-3.5 px-3 text-right min-w-[115px]">Dibayar / Baki</th>
-                            <th class="py-3.5 px-1 text-center">Jan</th>
-                            <th class="py-3.5 px-1 text-center">Feb</th>
-                            <th class="py-3.5 px-1 text-center">Mac</th>
-                            <th class="py-3.5 px-1 text-center">Apr</th>
-                            <th class="py-3.5 px-1 text-center">Mei</th>
-                            <th class="py-3.5 px-1 text-center">Jun</th>
-                            <th class="py-3.5 px-1 text-center">Jul</th>
-                            <th class="py-3.5 px-1 text-center">Ogos</th>
-                            <th class="py-3.5 px-1 text-center">Sep</th>
-                            <th class="py-3.5 px-1 text-center">Okt</th>
-                            <th class="py-3.5 px-1 text-center">Nov</th>
-                            <th class="py-3.5 px-1 text-center">Dis</th>
-                            <th class="py-3.5 px-4 text-center min-w-[190px]">Urus / Kemaskini</th>
-                        </tr>
-                    </thead>
-                    <tbody id="treasurer-matrix-body" class="divide-y divide-slate-100 text-sm">
-                        <!-- Dynamic Matrix Rows Injected Here -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="matrix-empty-state" class="hidden py-12 text-center px-4">
-                <p class="text-sm font-semibold text-slate-800">Tiada nama guru atau staf sepadan dengan carian.</p>
-            </div>
-        </section>
+                <!-- Card 3: Peratusan Kutipan -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Peratusan Kutipan</span>
+                        <div class="p-2 bg-sky-50 text-blue-600 rounded-xl">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline justify-between mt-3">
+                        <h3 id="stat-collection-pct" class="text-2xl font-extrabold text-blue-700">0%</h3>
+                        <span id="stat-collection-ratio" class="text-xs font-semibold text-slate-500">0 / 0 Bulan</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 mt-2.5 overflow-hidden">
+                        <div id="stat-collection-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Status Ahli -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Status Ahli</span>
+                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i data-lucide="pie-chart" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="stat-member-breakdown" class="text-base sm:text-lg font-extrabold text-slate-900 mt-3 leading-snug">0 Lunas • 0 Ansuran • 0 Belum</h3>
+                    <div class="flex items-center justify-between gap-2 mt-1.5">
+                        <p id="stat-member-total-sub" class="text-xs text-slate-500">Daripada 10 ahli berdaftar</p>
+                        <button type="button" onclick="quickFilterLumpsumInMatrix()" title="Klik untuk tapis pembayar Lumpsum" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition-colors cursor-pointer shrink-0">
+                            <i data-lucide="award" class="w-3 h-3"></i>
+                            <span id="stat-lumpsum-pill">0 Lumpsum</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search & Filter Bar -->
+            <section class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+                    <div class="relative flex-1 min-w-[220px]">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="matrix-search" onkeyup="renderTreasurerMatrix()" placeholder="Cari nama guru atau AKP..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white">
+                    </div>
+
+                    <select id="matrix-filter-category" onchange="renderTreasurerMatrix()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium text-slate-700 cursor-pointer">
+                        <option value="ALL">Semua Kategori (Guru & AKP)</option>
+                        <option value="Guru">Guru Sahaja</option>
+                        <option value="AKP">AKP Sahaja</option>
+                    </select>
+
+                    <select id="matrix-filter-status" onchange="renderTreasurerMatrix()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 font-medium text-slate-700 cursor-pointer">
+                        <option value="ALL">Semua Status Bayaran</option>
+                        <option value="LUNAS">Lunas (Semua)</option>
+                        <option value="LUNAS_LUMPSUM">Lunas (Lumpsum Sahaja)</option>
+                        <option value="ANSURAN">Dalam Proses Ansuran</option>
+                        <option value="BELUM">Belum Lunas</option>
+                    </select>
+                </div>
+
+                <!-- Legend -->
+                <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <span class="font-semibold text-slate-700">Petunjuk Petak Bulan:</span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-[10px]">✓ Tunai / QR / Bank</span>
+                            Sudah Bayar (Klik untuk ubah)
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-6 h-6 rounded bg-rose-100 text-rose-700 border border-rose-200 inline-flex items-center justify-center font-bold">!</span>
+                            Belum Bayar
+                        </span>
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-6 h-6 rounded bg-slate-100 text-slate-400 border border-slate-200 inline-flex items-center justify-center font-bold">-</span>
+                            Dikecualikan
+                        </span>
+                    </div>
+                    <span class="text-blue-700 font-semibold">Klik mana-mana petak bulan atau butang "Kemaskini" untuk ubah status</span>
+                </div>
+            </section>
+
+            <!-- Jadual Matriks Pembayaran & Kemas Kini (Jan–Dis) -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-sky-50/80 border-b border-slate-200 text-xs font-bold text-blue-950 uppercase tracking-wider">
+                                <th class="py-3.5 px-4 sticky left-0 bg-sky-50 z-10 min-w-[225px] border-r border-slate-200">Nama Ahli & Kategori</th>
+                                <th class="py-3.5 px-3 text-center min-w-[140px]">Status</th>
+                                <th class="py-3.5 px-3 text-right min-w-[115px]">Dibayar / Baki</th>
+                                <th class="py-3.5 px-1 text-center">Jan</th>
+                                <th class="py-3.5 px-1 text-center">Feb</th>
+                                <th class="py-3.5 px-1 text-center">Mac</th>
+                                <th class="py-3.5 px-1 text-center">Apr</th>
+                                <th class="py-3.5 px-1 text-center">Mei</th>
+                                <th class="py-3.5 px-1 text-center">Jun</th>
+                                <th class="py-3.5 px-1 text-center">Jul</th>
+                                <th class="py-3.5 px-1 text-center">Ogos</th>
+                                <th class="py-3.5 px-1 text-center">Sep</th>
+                                <th class="py-3.5 px-1 text-center">Okt</th>
+                                <th class="py-3.5 px-1 text-center">Nov</th>
+                                <th class="py-3.5 px-1 text-center">Dis</th>
+                                <th class="py-3.5 px-4 text-center min-w-[190px]">Urus / Kemaskini</th>
+                            </tr>
+                        </thead>
+                        <tbody id="treasurer-matrix-body" class="divide-y divide-slate-100 text-sm">
+                            <!-- Dynamic Matrix Rows Injected Here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="matrix-empty-state" class="hidden py-12 text-center px-4">
+                    <p class="text-sm font-semibold text-slate-800">Tiada nama guru atau staf sepadan dengan carian.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- =================================================================
+             TREASURER SUB-TAB B (NEW): KUTIPAN PROGRAM / BAYARAN LAIN-LAIN
+        ================================================================== -->
+        <div id="treasurer-subtab-programs" class="hidden space-y-6">
+            
+            <!-- Program Selector & Quick Action Bar -->
+            <section class="bg-white p-5 rounded-2xl border border-indigo-200 shadow-xs space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+                    <div class="flex-1 max-w-xl">
+                        <label for="treasurer-program-select" class="block text-xs font-bold text-indigo-950 uppercase tracking-wider mb-1.5">
+                            Pilih Kategori Bayaran / Program Khas
+                        </label>
+                        <select id="treasurer-program-select" onchange="renderTreasurerProgramsView()" class="w-full px-4 py-2.5 text-sm font-bold bg-indigo-50/70 border border-indigo-200 text-indigo-950 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer">
+                            <!-- Options injected via JS -->
+                        </select>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="openProgramBulkModal()" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors cursor-pointer">
+                            <i data-lucide="check-square" class="w-4 h-4"></i>
+                            <span>+ Tandakan Bayaran Pukal</span>
+                        </button>
+
+                        <button type="button" onclick="exportProgramsToExcelXLSX()" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-colors cursor-pointer">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                            <span>Eksport Excel Program (.xlsx)</span>
+                        </button>
+
+                        <button type="button" onclick="jumpToAdminPrograms()" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-semibold px-3.5 py-2.5 rounded-xl transition-colors cursor-pointer">
+                            <i data-lucide="settings-2" class="w-4 h-4 text-indigo-600"></i>
+                            <span>Urus Kategori</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="treasurer-program-info-bar" class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100 text-xs text-slate-600">
+                    <!-- Program details injected via JS -->
+                </div>
+            </section>
+
+            <!-- 4 Dynamic Stat Cards for Selected Program -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Kutipan Terkumpul</span>
+                        <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                            <i data-lucide="banknote" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="tprog-stat-collected" class="text-2xl font-extrabold text-indigo-700 mt-3">RM 0.00</h3>
+                    <p id="tprog-stat-collected-sub" class="text-xs text-slate-500 mt-1.5">Daripada sasaran RM 0.00</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Baki Belum Kutip</span>
+                        <div class="p-2 bg-rose-50 text-rose-600 rounded-xl">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="tprog-stat-due" class="text-2xl font-extrabold text-rose-600 mt-3">RM 0.00</h3>
+                    <p id="tprog-stat-due-sub" class="text-xs text-slate-500 mt-1.5">0 orang belum bayar</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Peratusan Kutipan</span>
+                        <div class="p-2 bg-sky-50 text-blue-600 rounded-xl">
+                            <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline justify-between mt-3">
+                        <h3 id="tprog-stat-pct" class="text-2xl font-extrabold text-blue-700">0%</h3>
+                        <span id="tprog-stat-ratio" class="text-xs font-semibold text-slate-500">0 / 0 Ahli</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 mt-2.5 overflow-hidden">
+                        <div id="tprog-stat-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Ringkasan Penyertaan</span>
+                        <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <h3 id="tprog-stat-breakdown" class="text-base sm:text-lg font-extrabold text-slate-900 mt-3">0 Lunas • 0 Belum</h3>
+                    <p class="text-xs text-slate-500 mt-1.5">Bayaran sekali gus (One-Off)</p>
+                </div>
+            </section>
+
+            <!-- Search & Filter Bar for Program Tracking -->
+            <section class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <div class="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3">
+                    <div class="relative flex-1 min-w-[220px]">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="tprog-search" onkeyup="renderTreasurerProgramsView()" placeholder="Cari nama guru atau AKP..." class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:bg-white">
+                    </div>
+
+                    <select id="tprog-filter-category" onchange="renderTreasurerProgramsView()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium text-slate-700 cursor-pointer">
+                        <option value="ALL">Semua Kategori (Guru & AKP)</option>
+                        <option value="Guru">Guru Sahaja</option>
+                        <option value="AKP">AKP Sahaja</option>
+                    </select>
+
+                    <select id="tprog-filter-status" onchange="renderTreasurerProgramsView()" class="px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium text-slate-700 cursor-pointer">
+                        <option value="ALL">Semua Status Bayaran</option>
+                        <option value="PAID">Sudah Bayar Sahaja</option>
+                        <option value="UNPAID">Belum Bayar Sahaja</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Treasurer Interactive Table for One-Off Program Payments -->
+            <section class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-indigo-50/80 border-b border-slate-200 text-xs font-bold text-indigo-950 uppercase tracking-wider">
+                                <th class="py-3.5 px-4 w-12 text-center">Bil</th>
+                                <th class="py-3.5 px-4 min-w-[230px]">Nama Ahli & Kategori</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Amaun (RM)</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Status</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Kaedah Bayaran</th>
+                                <th class="py-3.5 px-4 text-right whitespace-nowrap">Tarikh Bayaran</th>
+                                <th class="py-3.5 px-4 text-center whitespace-nowrap">Tindakan Bendahari</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tprog-tbody" class="divide-y divide-slate-100 text-sm">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="tprog-empty" class="hidden py-12 text-center px-4">
+                    <p class="text-sm font-semibold text-slate-800">Tiada rekod program atau ahli sepadan dengan penapis.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <!-- =====================================================================
@@ -689,7 +1007,7 @@
                 <div class="flex items-center gap-2">
                     <span class="px-2.5 py-0.5 rounded bg-sky-400/20 text-sky-200 border border-sky-400/30 text-[11px] font-bold">PANEL PENTADBIR SISTEM e-BKSZS</span>
                 </div>
-                <h2 class="text-lg sm:text-xl font-bold mt-1">Tetapan Sistem, Cloud Sync, Keselamatan PIN & Pengurusan Ahli</h2>
+                <h2 class="text-lg sm:text-xl font-bold mt-1">Tetapan Sistem, Kategori Bayaran Program, PIN & Pengurusan Ahli</h2>
                 <p class="text-xs text-slate-300 mt-0.5">Semua tetapan dan rekod ahli disegerakkan secara automatik apabila pautan Google Apps Script diaktifkan.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2.5 self-start sm:self-center">
@@ -704,7 +1022,7 @@
             </div>
         </div>
 
-        <!-- Inline Reset Confirmation Banner (No browser confirm()) -->
+        <!-- Inline Reset Confirmation Banner -->
         <div id="reset-confirm-banner" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-rose-100 text-rose-700 rounded-xl shrink-0">
@@ -712,7 +1030,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-rose-900">Sahkan Set Semula Data Demo e-BKSZS?</h4>
-                    <p class="text-xs text-rose-700">Tindakan ini akan memadam semua perubahan tersimpan dan mengembalikan 10 ahli sampel, PIN lalai (1234 / 9999) serta tetapan asal SK Seri Damai.</p>
+                    <p class="text-xs text-rose-700">Tindakan ini akan memadam semua perubahan tersimpan dan mengembalikan 10 ahli sampel, program contoh, PIN lalai (1234 / 9999) serta tetapan asal SK Seri Damai.</p>
                 </div>
             </div>
             <div class="flex items-center gap-2 self-end sm:self-center">
@@ -968,9 +1286,7 @@
                             </div>
 
                             <div class="flex flex-col sm:flex-row items-center gap-3.5">
-                                <div id="admin-qr-preview-box" class="w-28 h-28 rounded-xl bg-white border-2 border-pink-400 p-1.5 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs">
-                                    <!-- Live QR Preview rendered via JS -->
-                                </div>
+                                <div id="admin-qr-preview-box" class="w-28 h-28 rounded-xl bg-white border-2 border-pink-400 p-1.5 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs"></div>
 
                                 <div class="space-y-2 flex-1 text-center sm:text-left">
                                     <p class="text-[11px] text-slate-600 leading-relaxed">
@@ -1007,10 +1323,77 @@
                 </section>
             </div>
 
-            <!-- Right Column (7 Cols): Section 4 (Bulk Import) & Section 5 (Pengurusan Senarai Ahli) -->
+            <!-- Right Column (7 Cols): Section 4 (Kategori Program Lain-Lain), Section 5 (Bulk Import) & Section 6 (Pengurusan Ahli) -->
             <div class="lg:col-span-7 space-y-6">
+
+                <!-- SECTION 4 (NEW): PENGURUSAN KATEGORI BAYARAN LAIN-LAIN / PROGRAM -->
+                <section id="admin-section-programs" class="bg-white p-5 sm:p-6 rounded-2xl border border-indigo-200 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                        <div class="flex items-center gap-2.5">
+                            <div class="p-2 bg-indigo-100 text-indigo-800 rounded-lg">
+                                <i data-lucide="calendar-heart" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900">4. Pengurusan Kategori Bayaran Lain-Lain / Program</h3>
+                                <p class="text-xs text-slate-500">Cipta, sunting & kawal kutipan sekali gus (cth: Jamuan Dinner, Majlis Persaraan, Baju Korporat)</p>
+                            </div>
+                        </div>
+                        <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 shrink-0">
+                            <span id="admin-programs-count">0</span> Kategori
+                        </span>
+                    </div>
+
+                    <!-- Form: Tambah Kategori Bayaran Program Baharu -->
+                    <form onsubmit="addNewProgramCategory(event)" class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-3">
+                        <p class="text-xs font-bold text-indigo-950">+ Tambah Kategori Kutipan Baharu</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                            <div class="sm:col-span-6">
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Nama Program / Bayaran</label>
+                                <input type="text" id="new-prog-title" required placeholder="cth: Jamuan Akhir Tahun (Dinner) 2026" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Kadar Guru (RM)</label>
+                                <input type="number" id="new-prog-guru-rate" min="0" step="0.50" required placeholder="50" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold text-indigo-700">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Kadar AKP (RM)</label>
+                                <input type="number" id="new-prog-akp-rate" min="0" step="0.50" required placeholder="40" class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold text-sky-700">
+                            </div>
+                            <div class="sm:col-span-4">
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Tarikh Akhir (Pilihan)</label>
+                                <input type="date" id="new-prog-due" class="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                            <div class="sm:col-span-8">
+                                <label class="block text-[11px] font-semibold text-slate-700 mb-1">Catatan / Lokasi Program (Pilihan)</label>
+                                <input type="text" id="new-prog-notes" placeholder="cth: Bayaran makan malam tahunan di Hotel..." class="w-full px-3 py-2 text-xs sm:text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-2xs transition-colors cursor-pointer">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Cipta Kategori Bayaran</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Inline Delete Program Confirmation -->
+                    <div id="delete-program-confirm-box" class="hidden bg-rose-50 border border-rose-200 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                        <p class="text-xs font-semibold text-rose-900">
+                            Padam kategori program <strong id="delete-program-target-name">-</strong> beserta semua rekod bayarannya?
+                        </p>
+                        <div class="flex items-center gap-2 self-end sm:self-center">
+                            <button type="button" onclick="cancelDeleteProgram()" class="px-3 py-1.5 text-xs font-semibold bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 cursor-pointer">Batal</button>
+                            <button type="button" onclick="confirmDeleteProgram()" class="px-3.5 py-1.5 text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-lg cursor-pointer">Ya, Padam</button>
+                        </div>
+                    </div>
+
+                    <!-- List of Existing Program Categories -->
+                    <div id="admin-programs-list" class="space-y-2.5">
+                        <!-- Injected via JS -->
+                    </div>
+                </section>
                 
-                <!-- SECTION 4: TAMBAH AHLI SECARA PUKAL (BULK IMPORT EXCEL / CSV) -->
+                <!-- SECTION 5: TAMBAH AHLI SECARA PUKAL (BULK IMPORT EXCEL / CSV) -->
                 <section class="bg-white p-5 sm:p-6 rounded-2xl border border-blue-200 shadow-xs space-y-4">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
                         <div class="flex items-center gap-2.5">
@@ -1018,7 +1401,7 @@
                                 <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
                             </div>
                             <div>
-                                <h3 class="text-base font-bold text-slate-900">4. Tambah Ahli Secara Pukal (Bulk Import Excel / CSV)</h3>
+                                <h3 class="text-base font-bold text-slate-900">5. Tambah Ahli Secara Pukal (Bulk Import Excel / CSV)</h3>
                                 <p class="text-xs text-slate-500">Salin & tampal lajur terus daripada Excel atau format CSV</p>
                             </div>
                         </div>
@@ -1034,7 +1417,7 @@
                     </div>
 
                     <div>
-                        <textarea id="bulk-import-textarea" rows="4" oninput="previewBulkImportCount()" placeholder="Contoh:&#10;Cikgu Faridah binti Hassan, Guru, 0139876543, faridah@moe.edu.my&#10;Encik Azman bin Salleh, AKP, 0129112233, azman.akp@moe.edu.my" class="w-full p-3.5 text-xs sm:text-sm font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"></textarea>
+                        <textarea id="bulk-import-textarea" rows="3" oninput="previewBulkImportCount()" placeholder="Contoh:&#10;Cikgu Faridah binti Hassan, Guru, 0139876543, faridah@moe.edu.my&#10;Encik Azman bin Salleh, AKP, 0129112233, azman.akp@moe.edu.my" class="w-full p-3.5 text-xs sm:text-sm font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"></textarea>
                     </div>
 
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1052,15 +1435,15 @@
                     </div>
                 </section>
 
-                <!-- SECTION 5: PENGURUSAN SENARAI AHLI (TAMBAH / SUNTING / PADAM) -->
+                <!-- SECTION 6: PENGURUSAN SENARAI AHLI (TAMBAH / SUNTING / PADAM) -->
                 <section class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
                     <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100">
                         <div class="p-2 bg-slate-100 text-slate-700 rounded-lg">
                             <i data-lucide="user-plus" class="w-4 h-4"></i>
                         </div>
                         <div>
-                            <h3 class="text-base font-bold text-slate-900">5. Pengurusan Senarai Ahli (Tambah / Sunting / Padam)</h3>
-                            <p class="text-xs text-slate-500">Daftar guru atau AKP baharu secara individu</p>
+                            <h3 class="text-base font-bold text-slate-900">6. Pengurusan Senarai Ahli (Tambah / Sunting / Padam)</h3>
+                            <p class="text-xs text-slate-500">Daftar guru atau AKP baharu secara individu (automatik dipaparkan dalam semua kutipan)</p>
                         </div>
                     </div>
 
@@ -1096,7 +1479,7 @@
                         </div>
                     </form>
 
-                    <!-- Inline Delete Confirmation Banner (No confirm()) -->
+                    <!-- Inline Delete Confirmation Banner -->
                     <div id="delete-member-confirm-box" class="hidden bg-rose-50 border border-rose-200 p-3.5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                         <p class="text-xs font-semibold text-rose-900">
                             Padam rekod <strong id="delete-target-name">-</strong> daripada sistem?
@@ -1112,7 +1495,7 @@
                         <div class="px-4 py-3 bg-sky-50/60 border-b border-slate-200 flex items-center justify-between">
                             <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Senarai Ahli Berdaftar (<span id="admin-total-members">0</span> Orang)</h4>
                         </div>
-                        <div class="overflow-x-auto max-h-[420px] custom-scrollbar">
+                        <div class="overflow-x-auto max-h-[380px] custom-scrollbar">
                             <table class="w-full text-left border-collapse">
                                 <thead class="sticky top-0 bg-slate-50 z-10">
                                     <tr class="border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -1523,7 +1906,7 @@
                         </div>
                     </div>
 
-                    <!-- Special Lumpsum Settlement Banner (Shown when member paid via Lumpsum) -->
+                    <!-- Special Lumpsum Settlement Banner -->
                     <div id="receipt-lumpsum-banner" class="hidden bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-2.5 flex items-center justify-between gap-2 text-xs">
                         <div class="flex items-center gap-2 text-indigo-950 font-bold">
                             <i data-lucide="award" class="w-4 h-4 text-indigo-600 shrink-0"></i>
@@ -1606,7 +1989,7 @@
             <div class="px-5 py-4 bg-blue-700 text-white flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i data-lucide="message-circle" class="w-5 h-5"></i>
-                    <h3 class="text-sm font-bold">Pratonton Peringatan Tunggakan (WhatsApp)</h3>
+                    <h3 class="text-sm font-bold">Pratonton Peringatan (WhatsApp)</h3>
                 </div>
                 <button onclick="closeModal('modal-whatsapp')" class="text-blue-100 hover:text-white p-1 rounded-lg cursor-pointer">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -1654,9 +2037,7 @@
 
             <div class="p-6 flex flex-col items-center text-center space-y-4">
                 <div class="w-full bg-pink-50/60 p-4 rounded-2xl border-2 border-pink-500 flex items-center justify-center">
-                    <div id="qr-zoom-image-box" class="bg-white p-2.5 rounded-xl border border-pink-100 flex items-center justify-center">
-                        <!-- Enlarged QR Image or Default Vector QR -->
-                    </div>
+                    <div id="qr-zoom-image-box" class="bg-white p-2.5 rounded-xl border border-pink-100 flex items-center justify-center"></div>
                 </div>
 
                 <div class="w-full bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-left space-y-1.5">
@@ -1680,6 +2061,195 @@
                     Tutup Paparan QR
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         MODAL 9 (NEW): KEMAS KINI BAYARAN PROGRAM INDIVIDU (ONE-OFF)
+    ====================================================================== -->
+    <div id="modal-program-single" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-indigo-200 overflow-hidden">
+            <div class="px-5 py-4 bg-indigo-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="calendar-heart" class="w-5 h-5 text-indigo-300"></i>
+                    <div>
+                        <h3 class="text-sm font-bold">Kemas Kini Bayaran Program</h3>
+                        <p id="prog-single-title" class="text-[11px] text-indigo-200">-</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-program-single')" class="text-indigo-200 hover:text-white p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveProgramSinglePayment(event)" class="p-5 space-y-4">
+                <input type="hidden" id="prog-single-prog-id">
+                <input type="hidden" id="prog-single-member-id">
+
+                <div class="bg-indigo-50/70 p-3.5 rounded-xl border border-indigo-100">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-indigo-700 block">Nama Ahli</span>
+                    <p id="prog-single-member-name" class="text-sm font-bold text-slate-900 mt-0.5">-</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Kadar Bayaran: <strong id="prog-single-rate">RM 0.00</strong></p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1.5">Status Pembayaran</label>
+                    <select id="prog-single-status" onchange="toggleProgramSingleFields()" class="w-full px-3.5 py-2.5 text-sm font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                        <option value="PAID">Sudah Bayar (Lunas)</option>
+                        <option value="UNPAID">Belum Bayar</option>
+                    </select>
+                </div>
+
+                <div id="prog-single-details-group" class="space-y-3.5">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kaedah Pembayaran</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="prog_single_method" value="Tunai" class="peer sr-only" checked>
+                                <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-800 text-xs font-bold transition-all">
+                                    Tunai
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="prog_single_method" value="DuitNow QR" class="peer sr-only">
+                                <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-800 text-xs font-bold transition-all">
+                                    DuitNow QR
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="prog_single_method" value="Online Transfer" class="peer sr-only">
+                                <div class="p-2.5 text-center rounded-xl border border-slate-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-800 text-xs font-bold transition-all">
+                                    Online Transfer
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Tarikh Bayaran</label>
+                        <input type="date" id="prog-single-date" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeModal('modal-program-single')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">Batal</button>
+                    <button type="submit" class="flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs cursor-pointer">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        <span>Simpan Rekod</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         MODAL 10 (NEW): TANDAKAN BAYARAN PROGRAM PUKAL (BULK MARK PAID)
+    ====================================================================== -->
+    <div id="modal-program-bulk" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-indigo-200 overflow-hidden my-auto">
+            <div class="px-5 py-4 bg-indigo-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="check-square" class="w-5 h-5 text-indigo-300"></i>
+                    <div>
+                        <h3 class="text-sm font-bold">Tandakan Bayaran Program Secara Pukal</h3>
+                        <p id="prog-bulk-subtitle" class="text-[11px] text-indigo-200">-</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-program-bulk')" class="text-indigo-200 hover:text-white p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="submitProgramBulkPayment(event)" class="p-5 space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-slate-700">Pilih ahli yang telah membuat bayaran:</span>
+                    <button type="button" onclick="selectAllUnpaidInProgramBulk()" class="text-xs font-bold text-indigo-700 hover:underline cursor-pointer">Pilih Semua Belum Bayar</button>
+                </div>
+
+                <div id="prog-bulk-members-list" class="max-h-60 overflow-y-auto custom-scrollbar divide-y divide-slate-100 border border-slate-200 rounded-xl bg-slate-50/50">
+                    <!-- Checkboxes injected via JS -->
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kaedah Bayaran</label>
+                        <select id="prog-bulk-method" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-semibold">
+                            <option value="Tunai">Tunai</option>
+                            <option value="DuitNow QR">DuitNow QR</option>
+                            <option value="Online Transfer">Online Transfer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1.5">Tarikh Bayaran</label>
+                        <input type="date" id="prog-bulk-date" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeModal('modal-program-bulk')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">Batal</button>
+                    <button type="submit" class="flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs cursor-pointer">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        <span>Sahkan Bayaran Pukal</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         MODAL 11 (NEW): SUNTING KATEGORI PROGRAM (ADMIN EDIT MODAL)
+    ====================================================================== -->
+    <div id="modal-edit-program" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-indigo-200 overflow-hidden">
+            <div class="px-5 py-4 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="edit-3" class="w-4 h-4 text-indigo-400"></i>
+                    <h3 class="text-sm font-bold">Sunting Kategori Bayaran Program</h3>
+                </div>
+                <button onclick="closeModal('modal-edit-program')" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="saveEditedProgramModal(event)" class="p-5 space-y-3.5">
+                <input type="hidden" id="edit-prog-id">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Program / Bayaran</label>
+                    <input type="text" id="edit-prog-title" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kadar Guru (RM)</label>
+                        <input type="number" id="edit-prog-guru-rate" min="0" step="0.50" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold text-indigo-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kadar AKP (RM)</label>
+                        <input type="number" id="edit-prog-akp-rate" min="0" step="0.50" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold text-sky-700">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tarikh Akhir</label>
+                        <input type="date" id="edit-prog-due" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Status Kutipan</label>
+                        <select id="edit-prog-active" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold">
+                            <option value="true">Aktif (Dibuka)</option>
+                            <option value="false">Ditutup / Selesai</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan / Lokasi Program</label>
+                    <input type="text" id="edit-prog-notes" class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeModal('modal-edit-program')" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">Batal</button>
+                    <button type="submit" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs cursor-pointer">Simpan Perubahan</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1709,7 +2279,6 @@
         ];
         const MONTH_SHORT = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogos', 'Sep', 'Okt', 'Nov', 'Dis'];
 
-        // 3 Built-in Official Vector School Crests (Default Crest 1: Blue & Gold Shield)
         const DEFAULT_EMBLEMS = {
             emblem1: `<svg viewBox="0 0 64 64" class="w-full h-full p-1.5" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M32 6L10 15V31C10 45.5 19.4 58.6 32 62C44.6 58.6 54 45.5 54 31V15L32 6Z" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="2.5"/>
@@ -1731,7 +2300,6 @@
             </svg>`
         };
 
-        // Helper to build 12-month payment arrays cleanly
         function buildPayments(records) {
             return Array.from({ length: 12 }, (_, i) => {
                 const rec = records[i];
@@ -1740,7 +2308,43 @@
             });
         }
 
-        // Default Initial State (e-BKSZS, SK Seri Damai, Guru RM 15 & AKP RM 10, PINs 1234 & 9999, 10 Sample Members)
+        function createDefaultPrograms() {
+            return [
+                {
+                    id: 'prog_dinner_2026',
+                    title: 'Jamuan Akhir Tahun (Dinner) 2026',
+                    guruAmount: 50,
+                    akpAmount: 40,
+                    dueDate: '2026-11-30',
+                    notes: 'Kutipan makan malam tahunan kelab guru & staf. Bayaran sekali gus (one-off).',
+                    active: true,
+                    payments: {
+                        1: { paid: true, method: 'DuitNow QR', date: '2026-11-10' },
+                        2: { paid: true, method: 'Tunai', date: '2026-11-11' },
+                        4: { paid: true, method: 'DuitNow QR', date: '2026-11-09' },
+                        5: { paid: true, method: 'Tunai', date: '2026-11-12' },
+                        7: { paid: true, method: 'Online Transfer', date: '2026-11-14' },
+                        9: { paid: true, method: 'Tunai', date: '2026-11-15' }
+                    }
+                },
+                {
+                    id: 'prog_pencen_2026',
+                    title: 'Sumbangan Majlis Persaraan & Perpindahan Staf',
+                    guruAmount: 20,
+                    akpAmount: 15,
+                    dueDate: '2026-12-05',
+                    notes: 'Kutipan cenderamata kenang-kenangan untuk guru bersara & bertukar sekolah.',
+                    active: true,
+                    payments: {
+                        1: { paid: true, method: 'Tunai', date: '2026-11-12' },
+                        3: { paid: true, method: 'DuitNow QR', date: '2026-11-13' },
+                        4: { paid: true, method: 'DuitNow QR', date: '2026-11-10' },
+                        6: { paid: true, method: 'Tunai', date: '2026-11-16' }
+                    }
+                }
+            ];
+        }
+
         function createDefaultState() {
             return {
                 appsScriptUrl: DEFAULT_APPS_SCRIPT_URL,
@@ -1761,6 +2365,7 @@
                 qrImage: null,
                 activeMonths: Array(12).fill(true),
                 receiptSequence: 42,
+                otherPrograms: createDefaultPrograms(),
                 members: [
                     {
                         id: 1,
@@ -1941,8 +2546,11 @@
         };
         let pendingTargetView = null;
         let currentPortalSubTab = 'all';
+        let currentTreasurerSubTab = 'monthly';
         let allDirStatusFilter = 'ALL';
+        let portalProgStatusFilter = 'ALL';
         let pendingDeleteMemberId = null;
+        let pendingDeleteProgramId = null;
         let cloudSyncTimer = null;
         let lastCloudDiagnostic = 'Belum disambungkan ke Google Sheets. Sistem menggunakan storan pelayar tempatan.';
 
@@ -2040,6 +2648,9 @@
                 if (parsed.akpRate === undefined) {
                     merged.akpRate = 10;
                 }
+                if (!Array.isArray(merged.otherPrograms)) {
+                    merged.otherPrograms = createDefaultPrograms();
+                }
                 return merged;
             } catch (e) {
                 return createDefaultState();
@@ -2051,6 +2662,13 @@
                 ? memberOrCategory
                 : (memberOrCategory && memberOrCategory.category ? memberOrCategory.category : 'Guru');
             return cat === 'AKP' ? Number(state.akpRate || 10) : Number(state.guruRate || 15);
+        }
+
+        function getMemberProgramRate(program, member) {
+            if (!program || !member) return 0;
+            return member.category === 'AKP'
+                ? Number(program.akpAmount || 0)
+                : Number(program.guruAmount || 0);
         }
 
         function saveState(skipCloud = false) {
@@ -2097,7 +2715,6 @@
             return { valid: true };
         }
 
-        // JSONP Fallback Loader (Bypasses strict browser CORS on script.googleusercontent.com redirects)
         function loadViaJsonp(url) {
             return new Promise((resolve, reject) => {
                 const cbName = '__ebkszs_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
@@ -2134,6 +2751,9 @@
                     const incoming = data.payload;
                     state = Object.assign(createDefaultState(), incoming.config || {});
                     state.appsScriptUrl = url;
+                    if (!Array.isArray(state.otherPrograms)) {
+                        state.otherPrograms = createDefaultPrograms();
+                    }
                     if (Array.isArray(incoming.members)) {
                         state.members = incoming.members;
                     }
@@ -2199,7 +2819,6 @@
                     if (showSuccessToast) showToast(errMsg, 'error');
                 }
             } catch (err) {
-                // Attempt anti-CORS JSONP fallback before reporting error
                 try {
                     const jsonpData = await loadViaJsonp(url);
                     if (applyCloudPayload(jsonpData, url, showSuccessToast)) {
@@ -2307,7 +2926,7 @@
         // 3. DATE, FINANCIAL & VISUAL HELPERS
         // =========================================================================
         function getTodayIsoDate() {
-            return '2026-11-18';
+            return '2026-11-19';
         }
 
         function formatDisplayDate(dateStr) {
@@ -2492,11 +3111,16 @@
             document.getElementById('club-account-number').textContent = state.bankAccount;
             document.getElementById('portal-qr-display-box').innerHTML = getBankQrHTML('w-44 h-44');
 
+            // Populate Program Selectors
+            populateProgramSelectors();
+
             // Sub-views
             renderPortalAllDirectory();
             filterPortalDropdown();
             renderPortalIndividualView();
+            renderPortalProgramsView();
             renderTreasurerMatrix();
+            renderTreasurerProgramsView();
             renderAdminPanel();
             lucide.createIcons();
         }
@@ -2599,28 +3223,34 @@
         }
 
         // =========================================================================
-        // 5. VIEW 1: PORTAL SEMAKAN YURAN (SUB-TAB 1 & SUB-TAB 2)
+        // 5. VIEW 1: PORTAL SEMAKAN YURAN (SUB-TAB 1, 2 & 3)
         // =========================================================================
         function switchPortalSubTab(tabKey) {
             currentPortalSubTab = tabKey;
-            const allView = document.getElementById('portal-subtab-all');
-            const indView = document.getElementById('portal-subtab-individual');
-            const btnAll = document.getElementById('subtab-btn-all');
-            const btnInd = document.getElementById('subtab-btn-individual');
+            const views = {
+                all: document.getElementById('portal-subtab-all'),
+                individual: document.getElementById('portal-subtab-individual'),
+                programs: document.getElementById('portal-subtab-programs')
+            };
+            const btns = {
+                all: document.getElementById('subtab-btn-all'),
+                individual: document.getElementById('subtab-btn-individual'),
+                programs: document.getElementById('subtab-btn-programs')
+            };
 
-            if (tabKey === 'all') {
-                allView.classList.remove('hidden');
-                indView.classList.add('hidden');
-                btnAll.className = "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-800 shadow-xs cursor-pointer";
-                btnInd.className = "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
-                renderPortalAllDirectory();
-            } else {
-                allView.classList.add('hidden');
-                indView.classList.remove('hidden');
-                btnInd.className = "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-800 shadow-xs cursor-pointer";
-                btnAll.className = "flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
-                renderPortalIndividualView();
-            }
+            Object.keys(views).forEach(k => {
+                if (k === tabKey) {
+                    views[k].classList.remove('hidden');
+                    btns[k].className = "flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-bold transition-all bg-white text-blue-800 shadow-xs cursor-pointer";
+                } else {
+                    views[k].classList.add('hidden');
+                    btns[k].className = "flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
+                }
+            });
+
+            if (tabKey === 'all') renderPortalAllDirectory();
+            if (tabKey === 'individual') renderPortalIndividualView();
+            if (tabKey === 'programs') renderPortalProgramsView();
             lucide.createIcons();
         }
 
@@ -2807,7 +3437,7 @@
             document.getElementById('portal-active-months-label').textContent = `${fin.activeTotalMonths} Bulan Aktif (${member.category})`;
             document.getElementById('portal-schedule-year').textContent = state.sessionYear;
 
-            // Full Jan-Dec Monthly Schedule Table
+            // 1. Full Jan-Dec Monthly Schedule Table
             const tbody = document.getElementById('portal-schedule-tbody');
             tbody.innerHTML = '';
 
@@ -2861,6 +3491,180 @@
                 }
             });
 
+            // 2. Individual Program / Misc Payments Table
+            const indProgTbody = document.getElementById('portal-individual-programs-tbody');
+            const programs = state.otherPrograms || [];
+            if (programs.length === 0) {
+                indProgTbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-xs text-slate-500">Tiada kutipan program khas didaftarkan buat masa ini.</td></tr>`;
+            } else {
+                indProgTbody.innerHTML = programs.map(prog => {
+                    const rate = getMemberProgramRate(prog, member);
+                    const rec = (prog.payments && prog.payments[member.id]) ? prog.payments[member.id] : { paid: false };
+                    const statusBadge = rec.paid
+                        ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">Sudah Bayar</span>`
+                        : `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700 border border-rose-200">Belum Bayar</span>`;
+                    const detailTxt = rec.paid
+                        ? `${rec.method || 'Tunai'} • ${formatDisplayDate(rec.date)}`
+                        : (prog.dueDate ? `Tarikh Akhir: ${formatDisplayDate(prog.dueDate)}` : '-');
+
+                    return `
+                        <tr class="hover:bg-indigo-50/30 transition-colors">
+                            <td class="py-3 px-4">
+                                <div class="font-bold text-slate-900">${prog.title}</div>
+                                ${!prog.active ? `<span class="text-[10px] font-semibold text-slate-400">(Kutipan Ditutup)</span>` : ''}
+                            </td>
+                            <td class="py-3 px-3 text-right font-bold text-indigo-700">RM ${rate.toFixed(2)}</td>
+                            <td class="py-3 px-3 text-center">${statusBadge}</td>
+                            <td class="py-3 px-4 text-right text-xs text-slate-600">${detailTxt}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            lucide.createIcons();
+        }
+
+        // SUB-TAB 3: KUTIPAN PROGRAM / BAYARAN LAIN-LAIN (PUBLIC PORTAL VIEW)
+        function populateProgramSelectors() {
+            const programs = state.otherPrograms || [];
+            const portalSel = document.getElementById('portal-program-select');
+            const treasSel = document.getElementById('treasurer-program-select');
+
+            const prevPortalVal = portalSel ? portalSel.value : '';
+            const prevTreasVal = treasSel ? treasSel.value : '';
+
+            if (programs.length === 0) {
+                const emptyOpt = `<option value="">Tiada kategori program didaftarkan</option>`;
+                if (portalSel) portalSel.innerHTML = emptyOpt;
+                if (treasSel) treasSel.innerHTML = emptyOpt;
+                return;
+            }
+
+            const optionsHTML = programs.map(p => {
+                const statusTag = p.active ? 'Aktif' : 'Ditutup';
+                return `<option value="${p.id}">${p.title} (${statusTag}) — Guru: RM ${Number(p.guruAmount).toFixed(2)} | AKP: RM ${Number(p.akpAmount).toFixed(2)}</option>`;
+            }).join('');
+
+            if (portalSel) {
+                portalSel.innerHTML = optionsHTML;
+                if (prevPortalVal && programs.some(p => p.id === prevPortalVal)) {
+                    portalSel.value = prevPortalVal;
+                }
+            }
+            if (treasSel) {
+                treasSel.innerHTML = optionsHTML;
+                if (prevTreasVal && programs.some(p => p.id === prevTreasVal)) {
+                    treasSel.value = prevTreasVal;
+                }
+            }
+        }
+
+        function setPortalProgStatusFilter(statusKey) {
+            portalProgStatusFilter = statusKey;
+            document.querySelectorAll('.portal-prog-pill').forEach(btn => {
+                if (btn.dataset.pstatus === statusKey) {
+                    btn.className = "portal-prog-pill px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-2xs transition-all cursor-pointer";
+                } else {
+                    btn.className = "portal-prog-pill px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-700 transition-all cursor-pointer";
+                }
+            });
+            renderPortalProgramsView();
+        }
+
+        function renderPortalProgramsView() {
+            const select = document.getElementById('portal-program-select');
+            const metaBox = document.getElementById('portal-program-meta-box');
+            const notesEl = document.getElementById('portal-program-notes');
+            const tbody = document.getElementById('portal-programs-tbody');
+            const emptyEl = document.getElementById('portal-programs-empty');
+
+            const progId = select ? select.value : '';
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+
+            if (!prog) {
+                metaBox.innerHTML = `<span class="text-slate-500">Tiada kategori bayaran program didaftarkan oleh Admin.</span>`;
+                notesEl.classList.add('hidden');
+                tbody.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            const statusBadge = prog.active
+                ? `<span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold">Kutipan Dibuka</span>`
+                : `<span class="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 font-bold">Kutipan Ditutup</span>`;
+
+            metaBox.innerHTML = `
+                <span class="font-bold text-indigo-800 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200">Guru: RM ${Number(prog.guruAmount).toFixed(2)}</span>
+                <span class="font-bold text-sky-800 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">AKP: RM ${Number(prog.akpAmount).toFixed(2)}</span>
+                ${prog.dueDate ? `<span class="text-slate-600 font-medium">Tarikh Akhir: <strong>${formatDisplayDate(prog.dueDate)}</strong></span>` : ''}
+                ${statusBadge}
+            `;
+
+            if (prog.notes && prog.notes.trim()) {
+                notesEl.textContent = `Catatan: ${prog.notes}`;
+                notesEl.classList.remove('hidden');
+            } else {
+                notesEl.classList.add('hidden');
+            }
+
+            let paidCount = 0;
+            let unpaidCount = 0;
+            state.members.forEach(m => {
+                const rec = prog.payments && prog.payments[m.id];
+                if (rec && rec.paid) paidCount++;
+                else unpaidCount++;
+            });
+
+            const totalMembers = state.members.length;
+            const pct = totalMembers > 0 ? Math.round((paidCount / totalMembers) * 100) : 0;
+
+            document.getElementById('portal-prog-total-members').textContent = `${totalMembers} Orang`;
+            document.getElementById('portal-prog-paid-count').textContent = `${paidCount} Orang`;
+            document.getElementById('portal-prog-unpaid-count').textContent = `${unpaidCount} Orang`;
+            document.getElementById('portal-prog-pct').textContent = `${pct}%`;
+
+            const search = (document.getElementById('portal-prog-search').value || '').toLowerCase();
+            const catFilter = document.getElementById('portal-prog-category').value;
+
+            const filtered = state.members.filter(m => {
+                const rec = (prog.payments && prog.payments[m.id]) ? prog.payments[m.id] : { paid: false };
+                const matchSearch = m.name.toLowerCase().includes(search);
+                const matchCat = catFilter === 'ALL' || m.category === catFilter;
+                let matchStatus = true;
+                if (portalProgStatusFilter === 'PAID') matchStatus = Boolean(rec.paid);
+                if (portalProgStatusFilter === 'UNPAID') matchStatus = !rec.paid;
+                return matchSearch && matchCat && matchStatus;
+            });
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+
+            filtered.forEach((m, index) => {
+                const rate = getMemberProgramRate(prog, m);
+                const rec = (prog.payments && prog.payments[m.id]) ? prog.payments[m.id] : { paid: false };
+
+                const statusPill = rec.paid
+                    ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Sudah Bayar</span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Belum Bayar</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-indigo-50/35 transition-colors">
+                        <td class="py-3.5 px-4 text-center text-xs font-semibold text-slate-500">${index + 1}</td>
+                        <td class="py-3.5 px-4">
+                            <div class="font-semibold text-slate-900">${m.name}</div>
+                            <span class="inline-block mt-0.5 text-[10px] font-bold px-2 py-0.5 rounded ${m.category === 'Guru' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-sky-50 text-sky-700 border border-sky-200'}">${m.category}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right font-bold text-indigo-700 whitespace-nowrap">RM ${rate.toFixed(2)}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${statusPill}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${rec.paid ? getMethodBadgeHTML(rec.method || 'Tunai') : '<span class="text-slate-400">-</span>'}</td>
+                        <td class="py-3.5 px-4 text-right text-xs font-medium text-slate-600 whitespace-nowrap">${rec.paid ? formatDisplayDate(rec.date) : '-'}</td>
+                    </tr>
+                `;
+            });
             lucide.createIcons();
         }
 
@@ -2896,12 +3700,389 @@
             const memberId = parseInt(select.value) || (state.members[0] && state.members[0].id);
             const member = state.members.find(m => m.id === memberId);
             const senderName = member ? member.name : 'Ahli Kelab';
-            const msg = `Assalamualaikum ${state.treasurerName},\nSaya *${senderName}* telah membuat pembayaran yuran ${state.clubName} (${state.schoolName}) sesi ${state.sessionYear}. Berikut saya lampirkan bukti resit pembayaran untuk pengesahan sistem e-BKSZS. Terima kasih.`;
+            const msg = `Assalamualaikum ${state.treasurerName},\nSaya *${senderName}* telah membuat pembayaran yuran / kutipan program ${state.clubName} (${state.schoolName}) sesi ${state.sessionYear}. Berikut saya lampirkan bukti resit pembayaran untuk pengesahan sistem e-BKSZS. Terima kasih.`;
             window.open(`https://wa.me/${state.treasurerPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         // =========================================================================
-        // 6. VIEW 2: DASHBOARD BENDAHARI (MATRIX & PAYMENT UPDATES)
+        // 6. VIEW 2: DASHBOARD BENDAHARI (SUB-TAB A: MONTHLY & SUB-TAB B: PROGRAMS)
+        // =========================================================================
+        function switchTreasurerSubTab(tabKey) {
+            currentTreasurerSubTab = tabKey;
+            const monthlyView = document.getElementById('treasurer-subtab-monthly');
+            const progView = document.getElementById('treasurer-subtab-programs');
+            const btnMonthly = document.getElementById('treasurer-subtab-btn-monthly');
+            const btnProg = document.getElementById('treasurer-subtab-btn-programs');
+            const monthlyToolbar = document.getElementById('treasurer-monthly-toolbar');
+
+            if (tabKey === 'monthly') {
+                monthlyView.classList.remove('hidden');
+                progView.classList.add('hidden');
+                monthlyToolbar.classList.remove('hidden');
+                btnMonthly.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-blue-900 shadow-xs cursor-pointer";
+                btnProg.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
+                renderTreasurerMatrix();
+            } else {
+                monthlyView.classList.add('hidden');
+                progView.classList.remove('hidden');
+                monthlyToolbar.classList.add('hidden');
+                btnProg.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-indigo-900 shadow-xs cursor-pointer";
+                btnMonthly.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
+                renderTreasurerProgramsView();
+            }
+            lucide.createIcons();
+        }
+
+        function jumpToAdminPrograms() {
+            requestView('admin');
+            setTimeout(() => {
+                const sec = document.getElementById('admin-section-programs');
+                if (sec && authState.admin) {
+                    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 200);
+        }
+
+        function renderTreasurerProgramsView() {
+            const select = document.getElementById('treasurer-program-select');
+            const infoBar = document.getElementById('treasurer-program-info-bar');
+            const tbody = document.getElementById('tprog-tbody');
+            const emptyEl = document.getElementById('tprog-empty');
+
+            const progId = select ? select.value : '';
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+
+            if (!prog) {
+                infoBar.innerHTML = `<span class="text-rose-600 font-semibold">Tiada kategori program didaftarkan. Klik "Urus Kategori" untuk cipta kategori baharu.</span>`;
+                tbody.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            infoBar.innerHTML = `
+                <div class="flex flex-wrap items-center gap-3">
+                    <span>Kadar Bayaran: <strong class="text-indigo-700">Guru RM ${Number(prog.guruAmount).toFixed(2)}</strong> • <strong class="text-sky-700">AKP RM ${Number(prog.akpAmount).toFixed(2)}</strong></span>
+                    ${prog.dueDate ? `<span>• Tarikh Akhir: <strong>${formatDisplayDate(prog.dueDate)}</strong></span>` : ''}
+                    ${prog.notes ? `<span>• ${prog.notes}</span>` : ''}
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${prog.active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                    ${prog.active ? 'Status: Aktif' : 'Status: Ditutup'}
+                </span>
+            `;
+
+            let targetTotal = 0;
+            let collectedTotal = 0;
+            let dueTotal = 0;
+            let paidCount = 0;
+            let unpaidCount = 0;
+
+            state.members.forEach(m => {
+                const rate = getMemberProgramRate(prog, m);
+                targetTotal += rate;
+                const rec = prog.payments && prog.payments[m.id];
+                if (rec && rec.paid) {
+                    collectedTotal += rate;
+                    paidCount++;
+                } else {
+                    dueTotal += rate;
+                    unpaidCount++;
+                }
+            });
+
+            const totalMembers = state.members.length;
+            const pct = targetTotal > 0 ? Math.min(100, Math.round((collectedTotal / targetTotal) * 100)) : 0;
+
+            document.getElementById('tprog-stat-collected').textContent = `RM ${collectedTotal.toFixed(2)}`;
+            document.getElementById('tprog-stat-collected-sub').textContent = `Daripada sasaran RM ${targetTotal.toFixed(2)}`;
+            document.getElementById('tprog-stat-due').textContent = `RM ${dueTotal.toFixed(2)}`;
+            document.getElementById('tprog-stat-due-sub').textContent = `${unpaidCount} orang belum bayar`;
+            document.getElementById('tprog-stat-pct').textContent = `${pct}%`;
+            document.getElementById('tprog-stat-ratio').textContent = `${paidCount} / ${totalMembers} Ahli`;
+            document.getElementById('tprog-stat-bar').style.width = `${pct}%`;
+            document.getElementById('tprog-stat-breakdown').textContent = `${paidCount} Lunas • ${unpaidCount} Belum`;
+
+            const search = (document.getElementById('tprog-search').value || '').toLowerCase();
+            const catFilter = document.getElementById('tprog-filter-category').value;
+            const statusFilter = document.getElementById('tprog-filter-status').value;
+
+            const filtered = state.members.filter(m => {
+                const rec = (prog.payments && prog.payments[m.id]) ? prog.payments[m.id] : { paid: false };
+                const matchSearch = m.name.toLowerCase().includes(search);
+                const matchCat = catFilter === 'ALL' || m.category === catFilter;
+                let matchStatus = true;
+                if (statusFilter === 'PAID') matchStatus = Boolean(rec.paid);
+                if (statusFilter === 'UNPAID') matchStatus = !rec.paid;
+                return matchSearch && matchCat && matchStatus;
+            });
+
+            tbody.innerHTML = '';
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+
+            filtered.forEach((m, idx) => {
+                const rate = getMemberProgramRate(prog, m);
+                const rec = (prog.payments && prog.payments[m.id]) ? prog.payments[m.id] : { paid: false };
+
+                const statusPill = rec.paid
+                    ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Sudah Bayar</span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>Belum Bayar</span>`;
+
+                const actionBtn = rec.paid
+                    ? `<button type="button" onclick="openProgramSingleModal('${prog.id}', ${m.id})" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-[11px] font-bold transition-colors cursor-pointer">Ubah Rekod</button>`
+                    : `<button type="button" onclick="openProgramSingleModal('${prog.id}', ${m.id})" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold shadow-2xs transition-colors cursor-pointer">Tandakan Bayar</button>`;
+
+                const waBtn = !rec.paid
+                    ? `<button type="button" onclick="openProgramWhatsAppReminder('${prog.id}', ${m.id})" title="Hantar Peringatan WhatsApp" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-[11px] font-bold transition-colors cursor-pointer">WA</button>`
+                    : '';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-indigo-50/35 transition-colors">
+                        <td class="py-3.5 px-4 text-center text-xs font-semibold text-slate-500">${idx + 1}</td>
+                        <td class="py-3.5 px-4">
+                            <div class="font-bold text-slate-900">${m.name}</div>
+                            <span class="inline-block mt-0.5 text-[10px] font-bold px-2 py-0.5 rounded ${m.category === 'Guru' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-sky-50 text-sky-700 border border-sky-200'}">${m.category}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-right font-bold text-indigo-700 whitespace-nowrap">RM ${rate.toFixed(2)}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${statusPill}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">${rec.paid ? getMethodBadgeHTML(rec.method || 'Tunai') : '<span class="text-slate-400">-</span>'}</td>
+                        <td class="py-3.5 px-4 text-right text-xs font-medium text-slate-600 whitespace-nowrap">${rec.paid ? formatDisplayDate(rec.date) : '-'}</td>
+                        <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                            <div class="inline-flex items-center gap-1.5">
+                                ${actionBtn}
+                                ${waBtn}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function openProgramSingleModal(progId, memberId) {
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            const member = state.members.find(m => m.id === memberId);
+            if (!prog || !member) return;
+
+            if (!prog.payments) prog.payments = {};
+            const rec = prog.payments[memberId] || { paid: false, method: 'Tunai', date: '' };
+            const rate = getMemberProgramRate(prog, member);
+
+            document.getElementById('prog-single-prog-id').value = progId;
+            document.getElementById('prog-single-member-id').value = memberId;
+            document.getElementById('prog-single-title').textContent = prog.title;
+            document.getElementById('prog-single-member-name').textContent = `${member.name} (${member.category})`;
+            document.getElementById('prog-single-rate').textContent = `RM ${rate.toFixed(2)}`;
+
+            document.getElementById('prog-single-status').value = rec.paid ? 'PAID' : 'UNPAID';
+            const currentMethod = rec.method || 'Tunai';
+            document.querySelectorAll('input[name="prog_single_method"]').forEach(r => {
+                r.checked = (r.value === currentMethod);
+            });
+            document.getElementById('prog-single-date').value = rec.date ? toIsoDate(rec.date) : getTodayIsoDate();
+            toggleProgramSingleFields();
+
+            document.getElementById('modal-program-single').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function toggleProgramSingleFields() {
+            const isPaid = document.getElementById('prog-single-status').value === 'PAID';
+            const group = document.getElementById('prog-single-details-group');
+            if (isPaid) {
+                group.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                group.classList.add('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        function saveProgramSinglePayment(e) {
+            e.preventDefault();
+            const progId = document.getElementById('prog-single-prog-id').value;
+            const memberId = parseInt(document.getElementById('prog-single-member-id').value);
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            const member = state.members.find(m => m.id === memberId);
+            if (!prog || !member) return;
+
+            if (!prog.payments) prog.payments = {};
+            const isPaid = document.getElementById('prog-single-status').value === 'PAID';
+
+            if (isPaid) {
+                const selectedRadio = document.querySelector('input[name="prog_single_method"]:checked');
+                const method = selectedRadio ? selectedRadio.value : 'Tunai';
+                const date = document.getElementById('prog-single-date').value || getTodayIsoDate();
+                prog.payments[memberId] = { paid: true, method, date };
+                showToast(`Bayaran "${prog.title}" bagi ${member.name} direkodkan (${method}).`, 'success');
+            } else {
+                prog.payments[memberId] = { paid: false, method: '', date: '' };
+                showToast(`Rekod "${prog.title}" bagi ${member.name} ditukar kepada Belum Bayar.`, 'info');
+            }
+
+            saveState();
+            closeModal('modal-program-single');
+            syncAllViews();
+        }
+
+        function openProgramBulkModal() {
+            const progId = document.getElementById('treasurer-program-select').value;
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            if (!prog) {
+                showToast('Sila pilih atau cipta kategori program terlebih dahulu.', 'error');
+                return;
+            }
+
+            document.getElementById('prog-bulk-subtitle').textContent = prog.title;
+            document.getElementById('prog-bulk-date').value = getTodayIsoDate();
+
+            const listEl = document.getElementById('prog-bulk-members-list');
+            listEl.innerHTML = state.members.map(m => {
+                const rec = prog.payments && prog.payments[m.id];
+                const rate = getMemberProgramRate(prog, m);
+                if (rec && rec.paid) {
+                    return `
+                        <label class="flex items-center justify-between px-3.5 py-2.5 bg-emerald-50/60 text-xs text-emerald-800 opacity-75 cursor-not-allowed">
+                            <span class="flex items-center gap-2">
+                                <input type="checkbox" checked disabled class="rounded">
+                                <span class="font-semibold">${m.name} (${m.category})</span>
+                            </span>
+                            <span class="font-bold">Lunas • RM ${rate.toFixed(0)}</span>
+                        </label>
+                    `;
+                }
+                return `
+                    <label class="flex items-center justify-between px-3.5 py-2.5 bg-white hover:bg-indigo-50/60 text-xs text-slate-800 cursor-pointer">
+                        <span class="flex items-center gap-2">
+                            <input type="checkbox" name="prog_bulk_cb" value="${m.id}" class="rounded text-indigo-600 focus:ring-indigo-500">
+                            <span class="font-bold">${m.name} <span class="text-slate-500 font-normal">(${m.category})</span></span>
+                        </span>
+                        <span class="font-bold text-rose-600">RM ${rate.toFixed(0)}</span>
+                    </label>
+                `;
+            }).join('');
+
+            document.getElementById('modal-program-bulk').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function selectAllUnpaidInProgramBulk() {
+            document.querySelectorAll('input[name="prog_bulk_cb"]').forEach(cb => cb.checked = true);
+        }
+
+        function submitProgramBulkPayment(e) {
+            e.preventDefault();
+            const progId = document.getElementById('treasurer-program-select').value;
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            if (!prog) return;
+
+            const checked = document.querySelectorAll('input[name="prog_bulk_cb"]:checked');
+            if (checked.length === 0) {
+                showToast('Sila pilih sekurang-kurangnya seorang ahli.', 'error');
+                return;
+            }
+
+            if (!prog.payments) prog.payments = {};
+            const method = document.getElementById('prog-bulk-method').value;
+            const date = document.getElementById('prog-bulk-date').value || getTodayIsoDate();
+
+            checked.forEach(cb => {
+                const mId = parseInt(cb.value);
+                prog.payments[mId] = { paid: true, method, date };
+            });
+
+            saveState();
+            closeModal('modal-program-bulk');
+            syncAllViews();
+            showToast(`Berjaya merekodkan bayaran "${prog.title}" untuk ${checked.length} orang ahli!`, 'success');
+        }
+
+        function openProgramWhatsAppReminder(progId, memberId) {
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            const member = state.members.find(m => m.id === memberId);
+            if (!prog || !member) return;
+
+            const rate = getMemberProgramRate(prog, member);
+            document.getElementById('wa-recipient-name').textContent = member.name;
+            document.getElementById('wa-recipient-phone').textContent = `+${member.phone}`;
+
+            const dueLine = prog.dueDate ? `• Tarikh Akhir: *${formatDisplayDate(prog.dueDate)}*\n` : '';
+            const msg = `Assalamualaikum & Salam Sejahtera,\n` +
+                        `*${member.name}*\n\n` +
+                        `Makluman mesra kutipan *${prog.title}* bagi *${state.clubName} (${state.schoolName})*:\n\n` +
+                        `• Kategori: *${member.category}*\n` +
+                        `• Amaun Bayaran: *RM ${rate.toFixed(2)}*\n` +
+                        dueLine +
+                        `• Status Semasa: *Belum Bayar*\n\n` +
+                        `Bayaran boleh dibuat secara tunai atau melalui *DuitNow QR* (${state.bankName}: ${state.bankAccount}).\n\n` +
+                        `Terima kasih.\n` +
+                        `_${state.treasurerName} (Bendahari)_`;
+
+            document.getElementById('wa-message-preview').textContent = msg;
+            document.getElementById('wa-open-link').href = `https://wa.me/${member.phone}?text=${encodeURIComponent(msg)}`;
+            document.getElementById('modal-whatsapp').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function exportProgramsToExcelXLSX() {
+            if (typeof XLSX === 'undefined') {
+                showToast('Pustaka Excel sedang dimuatkan. Sila cuba sebentar lagi.', 'error');
+                return;
+            }
+
+            const programs = state.otherPrograms || [];
+            if (programs.length === 0) {
+                showToast('Tiada kategori program untuk dieksport.', 'error');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+
+            programs.forEach((prog, pIdx) => {
+                const rows = [
+                    [`REKOD KUTIPAN PROGRAM: ${prog.title.toUpperCase()} — e-BKSZS`],
+                    [`Sekolah: ${state.schoolName} | Sesi: ${state.sessionYear} | Kadar Guru: RM ${Number(prog.guruAmount).toFixed(2)} | Kadar AKP: RM ${Number(prog.akpAmount).toFixed(2)} | Tarikh Akhir: ${prog.dueDate ? formatDisplayDate(prog.dueDate) : '-'}`],
+                    [],
+                    ['Bil', 'Nama Ahli', 'Kategori', 'No. Telefon', 'Amaun (RM)', 'Status Bayaran', 'Kaedah Bayaran', 'Tarikh Bayaran']
+                ];
+
+                state.members.forEach((m, idx) => {
+                    const rate = getMemberProgramRate(prog, m);
+                    const rec = prog.payments && prog.payments[m.id];
+                    rows.push([
+                        idx + 1,
+                        m.name,
+                        m.category,
+                        m.phone,
+                        rate,
+                        rec && rec.paid ? 'Sudah Bayar' : 'Belum Bayar',
+                        rec && rec.paid ? (rec.method || 'Tunai') : '-',
+                        rec && rec.paid ? formatDisplayDate(rec.date) : '-'
+                    ]);
+                });
+
+                const ws = XLSX.utils.aoa_to_sheet(rows);
+                ws['!cols'] = [
+                    { wch: 5 },
+                    { wch: 34 },
+                    { wch: 10 },
+                    { wch: 16 },
+                    { wch: 14 },
+                    { wch: 16 },
+                    { wch: 18 },
+                    { wch: 16 }
+                ];
+                const safeSheetName = prog.title.replace(/[\\/?*\[\]:]/g, '').substring(0, 28) || `Program_${pIdx + 1}`;
+                XLSX.utils.book_append_sheet(wb, ws, safeSheetName);
+            });
+
+            const fileName = `Kutipan_Program_e-BKSZS_${state.sessionYear}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            showToast(`Fail Excel "${fileName}" berjaya dimuat turun!`, 'success');
+        }
+
+        // =========================================================================
+        // 6B. DASHBOARD BENDAHARI — MONTHLY MATRIX FUNCTIONS
         // =========================================================================
         function renderTreasurerMatrix() {
             document.getElementById('treasurer-rate-badge').textContent = `Kadar Yuran: Guru RM ${Number(state.guruRate).toFixed(2)} • AKP RM ${Number(state.akpRate).toFixed(2)} / bulan`;
@@ -3054,7 +4235,6 @@
             }
         }
 
-        // Focused Single-Cell Modal (Kemas Kini Bayaran Bulanan)
         function openSingleMonthModal(memberId, monthIdx) {
             const member = state.members.find(m => m.id === memberId);
             if (!member) return;
@@ -3117,7 +4297,6 @@
             syncAllViews();
         }
 
-        // Comprehensive Member Status & Payment Method Updater Modal
         function openMemberUpdaterModal(preselectMemberId = null) {
             const select = document.getElementById('updater-member-select');
             select.innerHTML = state.members.map(m => {
@@ -3245,7 +4424,6 @@
             }
         }
 
-        // Bulk Payment Modal (+ Rekod Bayaran Pukal)
         function openBulkPaymentModal() {
             const select = document.getElementById('bulk-member-select');
             select.innerHTML = state.members.map(m => {
@@ -3524,7 +4702,7 @@
                         </div>
                         <div class="text-right text-xs">
                             <p class="font-bold">Bendahari: ${state.treasurerName}</p>
-                            <p class="text-slate-500">Tarikh Cetakan: 18 Nov ${state.sessionYear}</p>
+                            <p class="text-slate-500">Tarikh Cetakan: 19 Nov ${state.sessionYear}</p>
                         </div>
                     </div>
 
@@ -3575,7 +4753,7 @@
 
             const now = new Date();
             const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            const dateTimeDisplay = `18 Nov ${state.sessionYear}, ${timeStr}`;
+            const dateTimeDisplay = `19 Nov ${state.sessionYear}, ${timeStr}`;
 
             document.getElementById('receipt-logo-box').innerHTML = getSchoolLogoHTML();
             document.getElementById('receipt-school-name').textContent = state.schoolName.toUpperCase();
@@ -3713,10 +4891,9 @@
         }
 
         // =========================================================================
-        // 9. VIEW 3: TETAPAN ADMIN (LOGO, IDENTITY, PIN SECURITY, BULK & CRUD)
+        // 9. VIEW 3: TETAPAN ADMIN (LOGO, IDENTITY, PIN, PROGRAMS, BULK & CRUD)
         // =========================================================================
         function renderAdminPanel() {
-            // Cloud Sync URL field
             const urlField = document.getElementById('admin-apps-script-url');
             if (urlField) {
                 urlField.value = getActiveScriptUrl();
@@ -3780,7 +4957,10 @@
                 `;
             }).join('');
 
-            // Section 5: Members CRUD Table
+            // Section 4: Program Categories List
+            renderAdminProgramsList();
+
+            // Section 6: Members CRUD Table
             document.getElementById('admin-total-members').textContent = state.members.length;
             const tbody = document.getElementById('admin-members-tbody');
             tbody.innerHTML = state.members.map(m => `
@@ -3801,6 +4981,147 @@
                     </td>
                 </tr>
             `).join('');
+        }
+
+        // Section 4: Program Categories CRUD
+        function renderAdminProgramsList() {
+            const programs = state.otherPrograms || [];
+            document.getElementById('admin-programs-count').textContent = programs.length;
+            const container = document.getElementById('admin-programs-list');
+
+            if (programs.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-4">Tiada kategori bayaran program didaftarkan. Gunakan borang di atas untuk menambah kategori baharu.</p>`;
+                return;
+            }
+
+            container.innerHTML = programs.map(p => {
+                let paidCount = 0;
+                state.members.forEach(m => {
+                    if (p.payments && p.payments[m.id] && p.payments[m.id].paid) paidCount++;
+                });
+
+                const statusPill = p.active
+                    ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">Aktif</span>`
+                    : `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700">Ditutup</span>`;
+
+                return `
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="space-y-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h4 class="text-sm font-bold text-slate-900">${p.title}</h4>
+                                ${statusPill}
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 text-xs text-slate-600">
+                                <span class="font-semibold text-indigo-700">Guru: RM ${Number(p.guruAmount).toFixed(2)}</span>
+                                <span>•</span>
+                                <span class="font-semibold text-sky-700">AKP: RM ${Number(p.akpAmount).toFixed(2)}</span>
+                                <span>•</span>
+                                <span>Lunas: <strong>${paidCount}/${state.members.length}</strong></span>
+                                ${p.dueDate ? `<span>• Akhir: ${formatDisplayDate(p.dueDate)}</span>` : ''}
+                            </div>
+                            ${p.notes ? `<p class="text-[11px] text-slate-500">${p.notes}</p>` : ''}
+                        </div>
+
+                        <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+                            <button type="button" onclick="openEditProgramModal('${p.id}')" class="px-2.5 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg cursor-pointer">Sunting</button>
+                            <button type="button" onclick="promptDeleteProgram('${p.id}')" class="px-2.5 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg cursor-pointer">Padam</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addNewProgramCategory(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-prog-title').value.trim();
+            const guruAmount = parseFloat(document.getElementById('new-prog-guru-rate').value);
+            const akpAmount = parseFloat(document.getElementById('new-prog-akp-rate').value);
+            const dueDate = document.getElementById('new-prog-due').value || '';
+            const notes = document.getElementById('new-prog-notes').value.trim();
+
+            if (!title || isNaN(guruAmount) || isNaN(akpAmount)) return;
+
+            if (!Array.isArray(state.otherPrograms)) state.otherPrograms = [];
+            state.otherPrograms.unshift({
+                id: 'prog_' + Date.now(),
+                title,
+                guruAmount,
+                akpAmount,
+                dueDate,
+                notes,
+                active: true,
+                payments: {}
+            });
+
+            document.getElementById('new-prog-title').value = '';
+            document.getElementById('new-prog-guru-rate').value = '';
+            document.getElementById('new-prog-akp-rate').value = '';
+            document.getElementById('new-prog-due').value = '';
+            document.getElementById('new-prog-notes').value = '';
+
+            saveState();
+            syncAllViews();
+            showToast(`Kategori program "${title}" berjaya dicipta!`, 'success');
+        }
+
+        function openEditProgramModal(progId) {
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            if (!prog) return;
+
+            document.getElementById('edit-prog-id').value = prog.id;
+            document.getElementById('edit-prog-title').value = prog.title;
+            document.getElementById('edit-prog-guru-rate').value = prog.guruAmount;
+            document.getElementById('edit-prog-akp-rate').value = prog.akpAmount;
+            document.getElementById('edit-prog-due').value = prog.dueDate || '';
+            document.getElementById('edit-prog-active').value = prog.active ? 'true' : 'false';
+            document.getElementById('edit-prog-notes').value = prog.notes || '';
+
+            document.getElementById('modal-edit-program').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function saveEditedProgramModal(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-prog-id').value;
+            const prog = (state.otherPrograms || []).find(p => p.id === id);
+            if (!prog) return;
+
+            prog.title = document.getElementById('edit-prog-title').value.trim();
+            prog.guruAmount = parseFloat(document.getElementById('edit-prog-guru-rate').value) || 0;
+            prog.akpAmount = parseFloat(document.getElementById('edit-prog-akp-rate').value) || 0;
+            prog.dueDate = document.getElementById('edit-prog-due').value || '';
+            prog.active = document.getElementById('edit-prog-active').value === 'true';
+            prog.notes = document.getElementById('edit-prog-notes').value.trim();
+
+            saveState();
+            closeModal('modal-edit-program');
+            syncAllViews();
+            showToast(`Kategori "${prog.title}" berjaya dikemaskini!`, 'success');
+        }
+
+        function promptDeleteProgram(progId) {
+            const prog = (state.otherPrograms || []).find(p => p.id === progId);
+            if (!prog) return;
+            pendingDeleteProgramId = progId;
+            document.getElementById('delete-program-target-name').textContent = prog.title;
+            document.getElementById('delete-program-confirm-box').classList.remove('hidden');
+        }
+
+        function cancelDeleteProgram() {
+            pendingDeleteProgramId = null;
+            document.getElementById('delete-program-confirm-box').classList.add('hidden');
+        }
+
+        function confirmDeleteProgram() {
+            if (!pendingDeleteProgramId) return;
+            const target = (state.otherPrograms || []).find(p => p.id === pendingDeleteProgramId);
+            state.otherPrograms = (state.otherPrograms || []).filter(p => p.id !== pendingDeleteProgramId);
+            cancelDeleteProgram();
+            saveState();
+            syncAllViews();
+            if (target) {
+                showToast(`Kategori program "${target.title}" telah dipadam.`, 'info');
+            }
         }
 
         function handleLogoUpload(event) {
@@ -3863,7 +5184,6 @@
             showToast('Identiti sekolah & nama bendahari berjaya disimpan!', 'success');
         }
 
-        // Section 2: Security & PIN Management
         function togglePinFieldVisibility(target) {
             const input1 = document.getElementById(`admin-new-${target}-pin`);
             const input2 = document.getElementById(`admin-confirm-${target}-pin`);
@@ -3980,7 +5300,7 @@
             showToast(`Status bulan ${MONTH_NAMES[idx]} dikemaskini.`, 'info');
         }
 
-        // Section 4: Bulk Import
+        // Section 5: Bulk Import
         function parseBulkLines(rawText) {
             const lines = rawText.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
             const parsed = [];
@@ -4066,7 +5386,7 @@
             showToast(`Berjaya mengimport ${records.length} orang ahli baharu secara pukal!`, 'success');
         }
 
-        // Section 5: Individual Member Add, Modal Edit & Inline Delete Confirmation
+        // Section 6: Individual Member Add, Modal Edit & Inline Delete Confirmation
         function addSingleMember(e) {
             e.preventDefault();
             const name = document.getElementById('member-name-input').value.trim();
@@ -4151,6 +5471,11 @@
             if (!pendingDeleteMemberId) return;
             const target = state.members.find(m => m.id === pendingDeleteMemberId);
             state.members = state.members.filter(m => m.id !== pendingDeleteMemberId);
+            (state.otherPrograms || []).forEach(p => {
+                if (p.payments && p.payments[pendingDeleteMemberId]) {
+                    delete p.payments[pendingDeleteMemberId];
+                }
+            });
             cancelDeleteMember();
             saveState();
             syncAllViews();
