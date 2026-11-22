@@ -200,6 +200,10 @@
                         <i data-lucide="calendar-heart" class="w-4 h-4"></i>
                         <span>Kutipan Program / Lain-Lain</span>
                     </button>
+                    <button type="button" onclick="openUploadProofModal()" class="flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-extrabold transition-all bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-xs cursor-pointer">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                        <span>Muat Naik Bukti Resit</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -513,23 +517,23 @@
                                     <span id="club-account-number" class="text-sm font-mono font-bold text-blue-700">06019010084721</span>
                                 </div>
                                 <button onclick="copyAccountNumber()" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold shadow-2xs transition-colors cursor-pointer">
-                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                                    <span>Salin No. Akaun</span>
-                                </button>
-                            </div>
+                        <div class="w-full space-y-2">
+                            <button type="button" onclick="openUploadProofModal()" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-xs transition-all cursor-pointer">
+                                <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                                <span>Muat Naik Bukti Resit dalam Sistem</span>
+                            </button>
+                            <button type="button" onclick="sendProofToTreasurer()" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-xs transition-all cursor-pointer">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                                <span>Hantar Bukti ke WhatsApp Bendahari</span>
+                            </button>
                         </div>
-
-                        <button onclick="sendProofToTreasurer()" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-3 px-4 rounded-xl shadow-xs transition-all cursor-pointer">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                            <span>Hantar Bukti Resit ke Bendahari</span>
-                        </button>
                     </div>
                 </aside>
             </div>
         </div>
 
         <!-- =================================================================
-             SUB-TAB 3 (NEW): KUTIPAN PROGRAM / BAYARAN LAIN-LAIN (PUBLIC VIEW)
+             SUB-TAB 3: KUTIPAN PROGRAM / BAYARAN LAIN-LAIN (PUBLIC VIEW)
         ================================================================== -->
         <div id="portal-subtab-programs" class="hidden space-y-5">
             
@@ -682,6 +686,11 @@
                     <button id="treasurer-subtab-btn-programs" onclick="switchTreasurerSubTab('programs')" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
                         <i data-lucide="calendar-heart" class="w-4 h-4"></i>
                         <span>Kutipan Program / Bayaran Lain-Lain</span>
+                    </button>
+                    <button id="treasurer-subtab-btn-proofs" onclick="switchTreasurerSubTab('proofs')" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer">
+                        <i data-lucide="image" class="w-4 h-4"></i>
+                        <span>Semakan Bukti Resit</span>
+                        <span id="treasurer-proofs-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white">0</span>
                     </button>
                 </div>
 
@@ -856,7 +865,7 @@
         </div>
 
         <!-- =================================================================
-             TREASURER SUB-TAB B (NEW): KUTIPAN PROGRAM / BAYARAN LAIN-LAIN
+             TREASURER SUB-TAB B: KUTIPAN PROGRAM / BAYARAN LAIN-LAIN
         ================================================================== -->
         <div id="treasurer-subtab-programs" class="hidden space-y-6">
             
@@ -994,6 +1003,38 @@
                 </div>
             </section>
         </div>
+
+        <!-- =================================================================
+             TREASURER SUB-TAB C: SEMAKAN BUKTI RESIT BAYARAN GURU / AKP
+        ================================================================== -->
+        <div id="treasurer-subtab-proofs" class="hidden space-y-6">
+            <section class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="file-check-2" class="w-5 h-5 text-emerald-600"></i>
+                        <span>Semakan & Pengesahan Bukti Bayaran Dalam Talian</span>
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">Semak tangkapan skrin (screenshot) resit yang dimuat naik oleh guru & AKP, kemudian tekan <strong>Sahkan & Rekod Lunas</strong>.</p>
+                </div>
+
+                <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 self-start sm:self-center">
+                    <button type="button" id="proof-filter-pending" onclick="setProofsFilter('PENDING')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-2xs transition-all cursor-pointer">
+                        Menunggu Pengesahan (<span id="count-proofs-pending">0</span>)
+                    </button>
+                    <button type="button" id="proof-filter-approved" onclick="setProofsFilter('APPROVED')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer">
+                        Telah Disahkan (<span id="count-proofs-approved">0</span>)
+                    </button>
+                </div>
+            </section>
+
+            <section id="treasurer-proofs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Proof cards injected via JS -->
+            </section>
+
+            <div id="treasurer-proofs-empty" class="hidden bg-white rounded-2xl border border-slate-200 py-12 text-center px-4">
+                <p class="text-sm font-semibold text-slate-800">Tiada rekod bukti bayaran dalam kategori ini buat masa ini.</p>
+            </div>
+        </div>
     </main>
 
     <!-- =====================================================================
@@ -1052,8 +1093,8 @@
                                 <i data-lucide="cloud" class="w-4 h-4"></i>
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold text-slate-900">Sambungan Real-Time Google Sheets</h3>
-                                <p class="text-[11px] text-slate-500">Segerakkan data secara langsung antara semua peranti</p>
+                                <h3 class="text-sm font-bold text-slate-900">Sambungan Real-Time Google Sheets & E-mel</h3>
+                                <p class="text-[11px] text-slate-500">Segerakkan data & hantar resit e-mel automatik</p>
                             </div>
                         </div>
                         <span id="admin-cloud-status-pill" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
@@ -1062,10 +1103,10 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block text-xs font-semibold text-slate-700">URL Web App Google Apps Script (mesti berakhir dengan <code class="text-blue-700 font-bold">/exec</code>)</label>
+                        <label class="block text-xs font-semibold text-slate-700">URL Web App Google Apps Script (berakhir dengan <code class="text-blue-700 font-bold">/exec</code>)</label>
                         <input type="url" id="admin-apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600">
-                        <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
-                            <strong>Penting untuk Guru Sekolah:</strong> Gunakan akaun <strong>@gmail.com peribadi</strong> semasa membina Google Sheet & Apps Script. Akaun <strong>DELIMa (@moe-dl.edu.my)</strong> disekat oleh pentadbir KPM daripada akses awam (<em>Anyone</em>).
+                        <div class="p-2.5 rounded-lg bg-sky-50 border border-blue-200 text-[11px] text-blue-950 leading-relaxed">
+                            <strong>Tip E-mel Automatik:</strong> Apabila URL Apps Script disambungkan, butang <em>"Hantar ke E-mel"</em> pada Resit Digital akan menghantar resit rasmi terus ke peti masuk ahli secara automatik.
                         </div>
                     </div>
 
@@ -1326,7 +1367,7 @@
             <!-- Right Column (7 Cols): Section 4 (Kategori Program Lain-Lain), Section 5 (Bulk Import) & Section 6 (Pengurusan Ahli) -->
             <div class="lg:col-span-7 space-y-6">
 
-                <!-- SECTION 4 (NEW): PENGURUSAN KATEGORI BAYARAN LAIN-LAIN / PROGRAM -->
+                <!-- SECTION 4: PENGURUSAN KATEGORI BAYARAN LAIN-LAIN / PROGRAM -->
                 <section id="admin-section-programs" class="bg-white p-5 sm:p-6 rounded-2xl border border-indigo-200 shadow-xs space-y-4">
                     <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
                         <div class="flex items-center gap-2.5">
@@ -1454,7 +1495,7 @@
                         </div>
 
                         <div class="sm:col-span-6">
-                            <label class="block text-xs font-semibold text-slate-700 mb-1">Alamat E-mel</label>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Alamat E-mel (Untuk Resit Automatik)</label>
                             <input type="email" id="member-email-input" placeholder="cth: aminah@moe.edu.my" required class="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600">
                         </div>
 
@@ -1851,7 +1892,7 @@
     </div>
 
     <!-- =====================================================================
-         MODAL 6: RESIT DIGITAL RASMI e-BKSZS (PRINT/PDF, WHATSAPP & EMAIL)
+         MODAL 6: RESIT DIGITAL RASMI e-BKSZS (PRINT/PDF, WHATSAPP & AUTO-EMAIL)
     ====================================================================== -->
     <div id="modal-digital-receipt" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto">
@@ -1973,10 +2014,10 @@
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                     <span>Hantar ke WhatsApp</span>
                 </a>
-                <a id="receipt-email-link" href="#" class="flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-slate-800 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl shadow-2xs transition-colors">
-                    <i data-lucide="mail" class="w-4 h-4 text-blue-600"></i>
-                    <span>Hantar ke E-mel</span>
-                </a>
+                <button type="button" id="btn-send-receipt-email" onclick="sendReceiptEmailAutomatically()" class="flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors cursor-pointer">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span id="btn-send-receipt-email-text">Hantar ke E-mel (Automatik)</span>
+                </button>
             </div>
         </div>
     </div>
@@ -2065,7 +2106,7 @@
     </div>
 
     <!-- =====================================================================
-         MODAL 9 (NEW): KEMAS KINI BAYARAN PROGRAM INDIVIDU (ONE-OFF)
+         MODAL 9: KEMAS KINI BAYARAN PROGRAM INDIVIDU (ONE-OFF)
     ====================================================================== -->
     <div id="modal-program-single" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-indigo-200 overflow-hidden">
@@ -2143,7 +2184,7 @@
     </div>
 
     <!-- =====================================================================
-         MODAL 10 (NEW): TANDAKAN BAYARAN PROGRAM PUKAL (BULK MARK PAID)
+         MODAL 10: TANDAKAN BAYARAN PROGRAM PUKAL (BULK MARK PAID)
     ====================================================================== -->
     <div id="modal-program-bulk" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
         <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-indigo-200 overflow-hidden my-auto">
@@ -2197,7 +2238,7 @@
     </div>
 
     <!-- =====================================================================
-         MODAL 11 (NEW): SUNTING KATEGORI PROGRAM (ADMIN EDIT MODAL)
+         MODAL 11: SUNTING KATEGORI PROGRAM (ADMIN EDIT MODAL)
     ====================================================================== -->
     <div id="modal-edit-program" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-indigo-200 overflow-hidden">
@@ -2254,6 +2295,135 @@
     </div>
 
     <!-- =====================================================================
+         MODAL 12: MUAT NAIK BUKTI RESIT BAYARAN OLEH GURU / AKP
+    ====================================================================== -->
+    <div id="modal-upload-proof" class="hidden fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-emerald-200 overflow-hidden my-auto">
+            <div class="px-5 py-4 bg-gradient-to-r from-emerald-800 to-teal-700 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="upload-cloud" class="w-5 h-5 text-emerald-200"></i>
+                    <div>
+                        <h3 class="text-sm font-bold">Muat Naik Bukti Resit Bayaran</h3>
+                        <p class="text-[11px] text-emerald-100">Hantar tangkapan skrin (screenshot) resit terus kepada Bendahari</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('modal-upload-proof')" class="text-emerald-100 hover:text-white p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="submitUploadProof(event)" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Guru / Staf (AKP)</label>
+                    <select id="proof-member-select" onchange="renderProofPaymentOptions()" required class="w-full px-3.5 py-2.5 text-sm font-bold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 cursor-pointer">
+                        <!-- Options injected via JS -->
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Kategori Bayaran</label>
+                    <select id="proof-payment-type" onchange="renderProofPaymentOptions()" class="w-full px-3.5 py-2.5 text-sm font-semibold bg-emerald-50/60 border border-emerald-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 cursor-pointer">
+                        <option value="MONTHLY">Yuran Bulanan (Jan–Dis)</option>
+                        <option value="PROGRAM">Kutipan Program / Bayaran Lain-Lain</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Section: Monthly Unpaid Checkboxes OR Program Dropdown -->
+                <div id="proof-monthly-box" class="space-y-1.5">
+                    <label class="block text-xs font-semibold text-slate-700">Pilih Bulan Yang Dibayar:</label>
+                    <div id="proof-months-grid" class="grid grid-cols-4 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <!-- Unpaid months injected via JS -->
+                    </div>
+                </div>
+
+                <div id="proof-program-box" class="hidden space-y-1.5">
+                    <label class="block text-xs font-semibold text-slate-700">Pilih Program / Kutipan Khas:</label>
+                    <select id="proof-program-select" onchange="updateProofCalculatedAmount()" class="w-full px-3.5 py-2.5 text-sm font-semibold bg-indigo-50/60 border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 cursor-pointer">
+                        <!-- Active programs injected via JS -->
+                    </select>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-2.5 flex items-center justify-between">
+                    <span class="text-xs font-semibold text-emerald-950">Jumlah Bayaran Dinyatakan:</span>
+                    <span id="proof-amount-display" class="text-base font-extrabold text-emerald-700">RM 0.00</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kaedah Bayaran</label>
+                        <select id="proof-method-select" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 font-semibold">
+                            <option value="DuitNow QR">DuitNow QR</option>
+                            <option value="Online Transfer">Online Transfer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tarikh Transaksi</label>
+                        <input type="date" id="proof-date-input" required class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Muat Naik Gambar / Screenshot Resit Bank</label>
+                    <label class="flex flex-col items-center justify-center p-4 border-2 border-dashed border-emerald-300 rounded-xl bg-emerald-50/40 hover:bg-emerald-50 cursor-pointer transition-colors">
+                        <i data-lucide="image-plus" class="w-6 h-6 text-emerald-600 mb-1"></i>
+                        <span id="proof-file-label" class="text-xs font-bold text-emerald-900">Klik untuk pilih gambar screenshot resit (JPG / PNG)</span>
+                        <input type="file" id="proof-file-input" accept="image/*" required onchange="handleProofImageSelect(event)" class="hidden">
+                    </label>
+                    <div id="proof-preview-wrap" class="hidden mt-2.5 flex items-center gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                        <img id="proof-image-preview" src="" alt="Pratonton Resit" class="w-16 h-16 object-cover rounded-lg border border-slate-300">
+                        <div class="text-xs text-slate-600">
+                            <p class="font-bold text-slate-800">Gambar resit sedia dihantar</p>
+                            <p class="text-[11px]">Akan disimpan automatik ke Google Drive Bendahari.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan Tambahan (Pilihan)</label>
+                    <input type="text" id="proof-notes-input" placeholder="cth: Resit bayaran Maybank2u / CIMB Clicks" class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600">
+                </div>
+
+                <div class="pt-2 flex items-center justify-end gap-2">
+                    <button type="button" onclick="closeModal('modal-upload-proof')" class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer">Batal</button>
+                    <button type="submit" id="btn-submit-proof" class="flex items-center gap-1.5 px-5 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-xs cursor-pointer">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span id="btn-submit-proof-text">Hantar Bukti Resit</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         MODAL 13: PAPARAN PENUH BUKTI RESIT & PENGESAHAN BENDAHARI
+    ====================================================================== -->
+    <div id="modal-view-proof" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
+        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto">
+            <div class="px-5 py-3.5 bg-slate-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="image" class="w-4 h-4 text-emerald-400"></i>
+                    <h3 class="text-sm font-bold">Pratonton Bukti Resit Bayaran</h3>
+                </div>
+                <button type="button" onclick="closeModal('modal-view-proof')" class="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-5 space-y-4">
+                <div id="view-proof-meta" class="bg-sky-50/70 p-3.5 rounded-xl border border-blue-100 text-xs space-y-1"></div>
+
+                <div class="bg-slate-100 p-2 rounded-xl border border-slate-200 flex items-center justify-center max-h-[380px] overflow-auto">
+                    <img id="view-proof-img" src="" alt="Bukti Resit Penuh" class="max-w-full max-h-[360px] object-contain rounded-lg">
+                </div>
+
+                <div id="view-proof-actions" class="flex flex-wrap items-center justify-end gap-2 pt-1">
+                    <!-- Dynamic approve/close buttons -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
          HIDDEN PRINTABLE SUMMARY REPORT AREA (USED WHEN CLICKING 'CETAK LAPORAN')
     ====================================================================== -->
     <div id="report-printable-area" class="hidden">
@@ -2262,7 +2432,7 @@
 
     <script>
         // =========================================================================
-        // 0. KONFIGURASI GOOGLE APPS SCRIPT (REAL-TIME CLOUD SYNC)
+        // 0. KONFIGURASI GOOGLE APPS SCRIPT (REAL-TIME CLOUD SYNC & AUTO-EMAIL)
         // Tampalkan URL Web App Google Apps Script anda di antara tanda petik di bawah
         // sebelum muat naik fail index.html ini ke GitHub Pages:
         // =========================================================================
@@ -2366,6 +2536,7 @@
                 activeMonths: Array(12).fill(true),
                 receiptSequence: 42,
                 otherPrograms: createDefaultPrograms(),
+                pendingProofs: [],
                 members: [
                     {
                         id: 1,
@@ -2551,8 +2722,12 @@
         let portalProgStatusFilter = 'ALL';
         let pendingDeleteMemberId = null;
         let pendingDeleteProgramId = null;
+        let currentProofsFilter = 'PENDING';
+        let uploadedProofFullBase64 = '';
+        let uploadedProofThumbBase64 = '';
         let cloudSyncTimer = null;
         let lastCloudDiagnostic = 'Belum disambungkan ke Google Sheets. Sistem menggunakan storan pelayar tempatan.';
+        let currentReceiptEmailPayload = null;
 
         function getActiveScriptUrl() {
             const hardcoded = (DEFAULT_APPS_SCRIPT_URL || '').trim();
@@ -2651,6 +2826,9 @@
                 if (!Array.isArray(merged.otherPrograms)) {
                     merged.otherPrograms = createDefaultPrograms();
                 }
+                if (!Array.isArray(merged.pendingProofs)) {
+                    merged.pendingProofs = [];
+                }
                 return merged;
             } catch (e) {
                 return createDefaultState();
@@ -2688,22 +2866,17 @@
 
         function validateAppsScriptUrl(url) {
             if (!url) return { valid: false, reason: 'URL kosong.' };
-            if (url.includes('/a/macros/')) {
+            const isStandardScript = url.startsWith('https://script.google.com/macros/s/') || url.startsWith('https://script.google.com/a/macros/');
+            if (!isStandardScript) {
                 return {
                     valid: false,
-                    reason: 'URL ini daripada akaun Google Workspace/DELIMa (@moe-dl.edu.my) yang disekat oleh pentadbir KPM. Sila cipta Google Sheet & Apps Script menggunakan akaun @gmail.com peribadi.'
-                };
-            }
-            if (!url.startsWith('https://script.google.com/macros/s/')) {
-                return {
-                    valid: false,
-                    reason: 'Format URL tidak sah! Pastikan anda menyalin Web App URL yang bermula dengan "https://script.google.com/macros/s/..." dan berakhir dengan "/exec".'
+                    reason: 'Format URL tidak sah! Pastikan anda menyalin Web App URL yang bermula dengan "https://script.google.com/..." dan berakhir dengan "/exec".'
                 };
             }
             if (url.endsWith('/dev')) {
                 return {
                     valid: false,
-                    reason: 'Anda menyalin URL ujian (/dev). Sila gunakan URL Web App rasmi yang berakhir dengan "/exec" selepas menekan Deploy -> New deployment.'
+                    reason: 'Anda menyalin URL ujian (/dev). Sila gunakan URL Web App rasmi yang berakhir dengan "/exec" selepas menekan Deploy.'
                 };
             }
             if (!url.includes('/exec')) {
@@ -2715,15 +2888,15 @@
             return { valid: true };
         }
 
-        function loadViaJsonp(url) {
+        function callAppsScriptJsonp(url, queryParams) {
             return new Promise((resolve, reject) => {
-                const cbName = '__ebkszs_cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                const cbName = '__ebkszs_cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
                 const script = document.createElement('script');
                 const timer = setTimeout(() => {
                     delete window[cbName];
                     script.remove();
                     reject(new Error('JSONP timeout'));
-                }, 10000);
+                }, 12000);
 
                 window[cbName] = function(data) {
                     clearTimeout(timer);
@@ -2740,9 +2913,13 @@
                 };
 
                 const sep = url.includes('?') ? '&' : '?';
-                script.src = `${url}${sep}action=load&callback=${cbName}&t=${Date.now()}`;
+                script.src = `${url}${sep}${queryParams}&callback=${cbName}&t=${Date.now()}`;
                 document.head.appendChild(script);
             });
+        }
+
+        function loadViaJsonp(url) {
+            return callAppsScriptJsonp(url, 'action=load');
         }
 
         function applyCloudPayload(data, url, showSuccessToast) {
@@ -2753,6 +2930,11 @@
                     state.appsScriptUrl = url;
                     if (!Array.isArray(state.otherPrograms)) {
                         state.otherPrograms = createDefaultPrograms();
+                    }
+                    if (Array.isArray(incoming.pendingProofs)) {
+                        state.pendingProofs = incoming.pendingProofs;
+                    } else if (!Array.isArray(state.pendingProofs)) {
+                        state.pendingProofs = [];
                     }
                     if (Array.isArray(incoming.members)) {
                         state.members = incoming.members;
@@ -2807,7 +2989,7 @@
                     const isFunctionMissing = rawText.includes('doGet') || rawText.includes('Script function not found');
                     const msg = isFunctionMissing
                         ? 'Kod Code.gs belum aktif di Deploy! Buka Apps Script -> Deploy -> Manage deployments -> Edit -> pilih "New version" -> Deploy.'
-                        : 'Apps Script memulangkan halaman log masuk HTML. Jika anda guna akaun DELIMa (@moe-dl.edu.my), tukar kepada akaun @gmail.com peribadi kerana KPM menyekat akses awam (Anyone).';
+                        : 'Apps Script memulangkan halaman log masuk HTML. Pastikan tetapan Deploy -> Who has access ditetapkan kepada "Anyone".';
                     setCloudSyncIndicator('error', 'Akses Disekat', msg);
                     if (showSuccessToast) showToast(msg, 'error');
                     return;
@@ -2828,7 +3010,7 @@
                     // Both fetch and JSONP blocked
                 }
 
-                const msg = 'Sambungan gagal: (1) Jika guna akaun DELIMa (@moe-dl.edu.my), sila bina semula di akaun @gmail.com peribadi. (2) Di Apps Script, klik Deploy -> Manage deployments -> Edit -> pilih "New version" & Who has access: "Anyone".';
+                const msg = 'Sambungan gagal: Buka Apps Script -> Deploy -> Manage deployments -> Edit -> pilih "New version" & pastikan Who has access ialah "Anyone".';
                 setCloudSyncIndicator('error', 'Ralat Cloud', msg);
                 if (showSuccessToast) showToast(msg, 'error');
             }
@@ -2845,14 +3027,15 @@
             }
 
             setCloudSyncIndicator('syncing', 'Menyimpan...');
-            const { members, customLogoDataUrl, qrImage, ...configOnly } = state;
+            const { members, customLogoDataUrl, qrImage, pendingProofs, ...configOnly } = state;
             const bodyPayload = {
                 action: 'save',
                 payload: {
                     config: configOnly,
                     members: members,
                     logo: customLogoDataUrl || '',
-                    qr: qrImage || ''
+                    qr: qrImage || '',
+                    pendingProofs: pendingProofs || []
                 }
             };
             const serialized = JSON.stringify(bodyPayload);
@@ -2904,7 +3087,7 @@
                     // Genuine connection / permission error
                 }
 
-                const msg = 'Ralat Cloud: Pelayar gagal menyimpan ke Google Apps Script. Pastikan anda guna akaun @gmail.com peribadi (bukan DELIMa @moe-dl.edu.my) dan cipta "New version" di Deploy.';
+                const msg = 'Ralat Cloud: Pelayar gagal menyimpan ke Google Apps Script. Sila pastikan anda cipta "New version" di Deploy & Who has access: "Anyone".';
                 setCloudSyncIndicator('error', 'Ralat Cloud', msg);
                 if (showSuccessToast) showToast(msg, 'error');
             }
@@ -3121,6 +3304,7 @@
             renderPortalProgramsView();
             renderTreasurerMatrix();
             renderTreasurerProgramsView();
+            renderTreasurerProofsView();
             renderAdminPanel();
             lucide.createIcons();
         }
@@ -3711,24 +3895,34 @@
             currentTreasurerSubTab = tabKey;
             const monthlyView = document.getElementById('treasurer-subtab-monthly');
             const progView = document.getElementById('treasurer-subtab-programs');
+            const proofsView = document.getElementById('treasurer-subtab-proofs');
             const btnMonthly = document.getElementById('treasurer-subtab-btn-monthly');
             const btnProg = document.getElementById('treasurer-subtab-btn-programs');
+            const btnProofs = document.getElementById('treasurer-subtab-btn-proofs');
             const monthlyToolbar = document.getElementById('treasurer-monthly-toolbar');
+
+            monthlyView.classList.add('hidden');
+            progView.classList.add('hidden');
+            proofsView.classList.add('hidden');
+            monthlyToolbar.classList.add('hidden');
+
+            btnMonthly.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
+            btnProg.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
+            btnProofs.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
 
             if (tabKey === 'monthly') {
                 monthlyView.classList.remove('hidden');
-                progView.classList.add('hidden');
                 monthlyToolbar.classList.remove('hidden');
                 btnMonthly.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-blue-900 shadow-xs cursor-pointer";
-                btnProg.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
                 renderTreasurerMatrix();
-            } else {
-                monthlyView.classList.add('hidden');
+            } else if (tabKey === 'programs') {
                 progView.classList.remove('hidden');
-                monthlyToolbar.classList.add('hidden');
                 btnProg.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-indigo-900 shadow-xs cursor-pointer";
-                btnMonthly.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all text-blue-100 hover:bg-blue-700/60 cursor-pointer";
                 renderTreasurerProgramsView();
+            } else {
+                proofsView.classList.remove('hidden');
+                btnProofs.className = "flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white text-emerald-900 shadow-xs cursor-pointer";
+                renderTreasurerProofsView();
             }
             lucide.createIcons();
         }
@@ -4738,7 +4932,7 @@
         }
 
         // =========================================================================
-        // 8. RESIT DIGITAL RASMI e-BKSZS MODAL (PRINT/PDF, WHATSAPP & EMAIL)
+        // 8. RESIT DIGITAL RASMI e-BKSZS MODAL (PRINT/PDF, WHATSAPP & AUTO-EMAIL)
         // =========================================================================
         function openOfficialReceiptModal(memberId, recentMonthIndices = null) {
             const member = state.members.find(m => m.id === memberId);
@@ -4787,6 +4981,7 @@
             const tbody = document.getElementById('receipt-items-tbody');
             tbody.innerHTML = '';
 
+            let emailHtmlRows = '';
             targetIndices.forEach(idx => {
                 const p = member.payments[idx];
                 tbody.innerHTML += `
@@ -4794,6 +4989,13 @@
                         <td class="py-2.5 px-4 font-semibold text-slate-800">Yuran Bulanan — ${MONTH_NAMES[idx]} ${state.sessionYear}</td>
                         <td class="py-2.5 px-3 text-center text-slate-600 font-medium">${p.method || 'Tunai'} (${formatDisplayDate(p.date)})</td>
                         <td class="py-2.5 px-4 text-right font-bold text-slate-900">${fin.monthlyRate.toFixed(2)}</td>
+                    </tr>
+                `;
+                emailHtmlRows += `
+                    <tr>
+                        <td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#1e293b;">Yuran Bulanan — ${MONTH_NAMES[idx]} ${state.sessionYear}</td>
+                        <td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:center;color:#475569;">${p.method || 'Tunai'} (${formatDisplayDate(p.date)})</td>
+                        <td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-weight:700;color:#0f172a;">RM ${fin.monthlyRate.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -4840,11 +5042,180 @@
                               `Bendahari Kehormat\n` +
                               `${state.clubName} • ${state.schoolName}`;
 
-            const recipientEmail = member.email && member.email !== '-' ? member.email : '';
-            document.getElementById('receipt-email-link').href = `mailto:${encodeURIComponent(recipientEmail)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+            const emailHtmlBody = `
+                <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;border:2px solid #1e40af;border-radius:12px;overflow:hidden;background:#ffffff;color:#1e293b;">
+                    <div style="background:linear-gradient(90deg,#1e3a8a,#2563eb);padding:18px 24px;color:#ffffff;">
+                        <div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#bae6fd;">RESIT RASMI DIGITAL • e-BKSZS</div>
+                        <h2 style="margin:4px 0 0 0;font-size:18px;">${state.schoolName.toUpperCase()}</h2>
+                        <p style="margin:2px 0 0 0;font-size:12px;color:#dbeafe;">${state.clubName} • Sesi ${state.sessionYear}</p>
+                    </div>
+                    <div style="padding:20px 24px;">
+                        <table style="width:100%;font-size:12px;margin-bottom:16px;background:#f0f9ff;padding:12px;border-radius:8px;border:1px solid #bae6fd;">
+                            <tr>
+                                <td><strong>No. Siri Resit:</strong> ${receiptNo}</td>
+                                <td style="text-align:right;"><strong>Tarikh:</strong> ${dateTimeDisplay}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:6px;"><strong>Nama Pembayar:</strong> ${member.name}</td>
+                                <td style="padding-top:6px;text-align:right;"><strong>Kategori:</strong> ${member.category}</td>
+                            </tr>
+                        </table>
+                        ${fin.isLumpsum ? `<div style="background:#eef2ff;border:1px solid #c7d2fe;color:#1e1b4b;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:bold;margin-bottom:14px;">KAEDAH PENYELESAIAN: BAYARAN PENUH SECARA LUMPSUM (SEKALIGUS)</div>` : ''}
+                        <table style="width:100%;border-collapse:collapse;font-size:12px;border:1px solid #bfdbfe;">
+                            <thead>
+                                <tr style="background:#eff6ff;color:#1e3a8a;border-bottom:1px solid #bfdbfe;">
+                                    <th style="padding:8px 12px;text-align:left;">Butiran Bayaran</th>
+                                    <th style="padding:8px 12px;text-align:center;">Kaedah & Tarikh</th>
+                                    <th style="padding:8px 12px;text-align:right;">Amaun</th>
+                                </tr>
+                            </thead>
+                            <tbody>${emailHtmlRows}</tbody>
+                            <tfoot>
+                                <tr style="background:#f8fafc;border-top:2px solid #1e40af;">
+                                    <td colspan="2" style="padding:10px 12px;text-align:right;font-weight:bold;">Jumlah Bayaran Diterima:</td>
+                                    <td style="padding:10px 12px;text-align:right;font-weight:800;color:#1d4ed8;font-size:14px;">RM ${txAmount.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="padding:8px 12px;text-align:right;color:#64748b;">Baki Tunggakan Semasa:</td>
+                                    <td style="padding:8px 12px;text-align:right;font-weight:bold;">RM ${fin.unpaidAmount.toFixed(2)} (${fin.statusLabel})</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <p style="margin-top:18px;font-size:11px;color:#64748b;line-height:1.5;">
+                            Resit ini dijana secara elektronik oleh sistem <strong>e-BKSZS</strong> dan sah digunakan sebagai bukti rasmi pembayaran yuran tanpa memerlukan tandatangan basah.<br><br>
+                            Disediakan oleh: <strong>${state.treasurerName}</strong> (Bendahari Kehormat)
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            const recipientEmail = (member.email && member.email !== '-') ? member.email.trim() : '';
+            const mailtoHref = `mailto:${encodeURIComponent(recipientEmail)}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+            currentReceiptEmailPayload = {
+                to: recipientEmail,
+                subject: emailSubject,
+                senderName: `${state.treasurerName} (e-BKSZS)`,
+                body: emailBody,
+                htmlBody: emailHtmlBody,
+                mailtoHref: mailtoHref,
+                receiptMeta: {
+                    receiptNo: receiptNo,
+                    dateTime: dateTimeDisplay,
+                    schoolName: state.schoolName,
+                    clubName: state.clubName,
+                    sessionYear: state.sessionYear,
+                    treasurerName: state.treasurerName,
+                    memberName: member.name,
+                    memberCategory: member.category,
+                    memberPhone: member.phone,
+                    memberEmail: member.email || '-',
+                    isLumpsum: fin.isLumpsum,
+                    items: targetIndices.map(idx => ({
+                        desc: `Yuran Bulanan — ${MONTH_NAMES[idx]} ${state.sessionYear}`,
+                        methodDate: `${member.payments[idx].method || 'Tunai'} (${formatDisplayDate(member.payments[idx].date)})`,
+                        amount: `RM ${fin.monthlyRate.toFixed(2)}`
+                    })),
+                    paidAmount: `RM ${txAmount.toFixed(2)}`,
+                    balanceDue: `RM ${fin.unpaidAmount.toFixed(2)} (${fin.statusLabel})`
+                }
+            };
+
+            const btnEmailText = document.getElementById('btn-send-receipt-email-text');
+            if (btnEmailText) {
+                btnEmailText.textContent = getActiveScriptUrl() ? 'Hantar E-mel + PDF (Automatik)' : 'Hantar ke E-mel';
+            }
 
             document.getElementById('modal-digital-receipt').classList.remove('hidden');
             lucide.createIcons();
+        }
+
+        async function sendReceiptEmailAutomatically() {
+            if (!currentReceiptEmailPayload) return;
+
+            if (!currentReceiptEmailPayload.to || !currentReceiptEmailPayload.to.includes('@')) {
+                showToast('Alamat e-mel ahli ini belum didaftarkan. Sila kemas kini e-mel di Tetapan Admin.', 'error');
+                return;
+            }
+
+            const scriptUrl = getActiveScriptUrl();
+            if (!scriptUrl) {
+                showToast('URL Apps Script belum dipautkan. Membuka aplikasi e-mel pelayar...', 'info');
+                window.location.href = currentReceiptEmailPayload.mailtoHref;
+                return;
+            }
+
+            const btn = document.getElementById('btn-send-receipt-email');
+            const btnText = document.getElementById('btn-send-receipt-email-text');
+            const originalText = btnText.textContent;
+
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-wait');
+            btnText.textContent = 'Menjana PDF & Menghantar...';
+
+            const requestBody = JSON.stringify({
+                action: 'sendReceiptEmail',
+                emailData: {
+                    to: currentReceiptEmailPayload.to,
+                    subject: currentReceiptEmailPayload.subject,
+                    senderName: currentReceiptEmailPayload.senderName,
+                    body: currentReceiptEmailPayload.body,
+                    htmlBody: currentReceiptEmailPayload.htmlBody,
+                    receiptMeta: currentReceiptEmailPayload.receiptMeta
+                }
+            });
+
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    redirect: 'follow',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: requestBody
+                });
+
+                const rawText = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(rawText);
+                } catch (e) {
+                    throw new Error('Jawapan Apps Script bukan JSON. Pastikan anda sudah Deploy New Version.');
+                }
+
+                if (result && result.status === 'ok') {
+                    showToast(`Resit digital rasmi (berserta lampiran PDF) berjaya dihantar ke ${currentReceiptEmailPayload.to}!`, 'success');
+                } else {
+                    throw new Error((result && result.message) || 'Gagal menghantar e-mel melalui Apps Script.');
+                }
+            } catch (err) {
+                // Fallback via JSONP GET (hantar receiptMeta supaya Apps Script jana PDF & HTML)
+                try {
+                    const compactData = encodeURIComponent(JSON.stringify({
+                        to: currentReceiptEmailPayload.to,
+                        subject: currentReceiptEmailPayload.subject,
+                        senderName: currentReceiptEmailPayload.senderName,
+                        body: currentReceiptEmailPayload.body,
+                        receiptMeta: currentReceiptEmailPayload.receiptMeta
+                    }));
+                    const jsonpRes = await callAppsScriptJsonp(scriptUrl, `action=sendReceiptEmail&data=${compactData}`);
+                    if (jsonpRes && jsonpRes.status === 'ok') {
+                        showToast(`Resit digital rasmi (berserta lampiran PDF) berjaya dihantar ke ${currentReceiptEmailPayload.to}!`, 'success');
+                        return;
+                    }
+                } catch (jsonpErr) {
+                    // Both POST and JSONP failed
+                }
+
+                showToast(`Penghantaran automatik gagal (${err.message}). Membuka draf e-mel sebagai sandaran...`, 'error');
+                setTimeout(() => {
+                    window.location.href = currentReceiptEmailPayload.mailtoHref;
+                }, 1200);
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-wait');
+                btnText.textContent = originalText;
+            }
         }
 
         function printOfficialReceipt() {
@@ -4891,7 +5262,484 @@
         }
 
         // =========================================================================
-        // 9. VIEW 3: TETAPAN ADMIN (LOGO, IDENTITY, PIN, PROGRAMS, BULK & CRUD)
+        // 10. MUAT NAIK & SEMAKAN BUKTI RESIT BAYARAN (GURU/AKP -> BENDAHARI)
+        // =========================================================================
+        function openUploadProofModal() {
+            const memberSel = document.getElementById('proof-member-select');
+            const portalMemberSel = document.getElementById('portal-member-select');
+            const preselectId = portalMemberSel && portalMemberSel.value ? parseInt(portalMemberSel.value) : (state.members[0] && state.members[0].id);
+
+            memberSel.innerHTML = state.members.map(m =>
+                `<option value="${m.id}">${m.name} (${m.category})</option>`
+            ).join('');
+
+            if (preselectId) {
+                memberSel.value = preselectId;
+            }
+
+            document.getElementById('proof-payment-type').value = currentPortalSubTab === 'programs' ? 'PROGRAM' : 'MONTHLY';
+            document.getElementById('proof-date-input').value = getTodayIsoDate();
+            document.getElementById('proof-notes-input').value = '';
+            document.getElementById('proof-file-input').value = '';
+            document.getElementById('proof-file-label').textContent = 'Klik untuk pilih gambar screenshot resit (JPG / PNG)';
+            document.getElementById('proof-preview-wrap').classList.add('hidden');
+            uploadedProofFullBase64 = '';
+            uploadedProofThumbBase64 = '';
+
+            renderProofPaymentOptions();
+            document.getElementById('modal-upload-proof').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function renderProofPaymentOptions() {
+            const memberId = parseInt(document.getElementById('proof-member-select').value);
+            const member = state.members.find(m => m.id === memberId) || state.members[0];
+            const type = document.getElementById('proof-payment-type').value;
+            const monthlyBox = document.getElementById('proof-monthly-box');
+            const progBox = document.getElementById('proof-program-box');
+
+            if (type === 'MONTHLY') {
+                monthlyBox.classList.remove('hidden');
+                progBox.classList.add('hidden');
+
+                const grid = document.getElementById('proof-months-grid');
+                if (!member) {
+                    grid.innerHTML = '';
+                    return;
+                }
+
+                grid.innerHTML = member.payments.map((p, idx) => {
+                    const isMonthActive = state.activeMonths[idx];
+                    if (p.paid) {
+                        return `<label class="flex items-center gap-1.5 p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 opacity-70 cursor-not-allowed">
+                            <input type="checkbox" checked disabled class="rounded">
+                            <span>${MONTH_SHORT[idx]}</span>
+                        </label>`;
+                    }
+                    if (!isMonthActive) {
+                        return `<label class="flex items-center gap-1.5 p-2 rounded-lg bg-slate-100 border border-slate-200 text-xs text-slate-400 cursor-not-allowed">
+                            <input type="checkbox" disabled class="rounded">
+                            <span>${MONTH_SHORT[idx]}</span>
+                        </label>`;
+                    }
+                    return `<label class="flex items-center gap-1.5 p-2 rounded-lg bg-white hover:bg-emerald-50 border border-slate-300 text-xs text-slate-800 cursor-pointer">
+                        <input type="checkbox" name="proof_month_cb" value="${idx}" onchange="updateProofCalculatedAmount()" class="rounded text-emerald-600 focus:ring-emerald-500">
+                        <span class="font-bold">${MONTH_SHORT[idx]}</span>
+                    </label>`;
+                }).join('');
+            } else {
+                monthlyBox.classList.add('hidden');
+                progBox.classList.remove('hidden');
+
+                const progSel = document.getElementById('proof-program-select');
+                const activeProgs = (state.otherPrograms || []).filter(p => p.active);
+                if (activeProgs.length === 0) {
+                    progSel.innerHTML = `<option value="">Tiada kutipan program aktif buat masa ini</option>`;
+                } else {
+                    progSel.innerHTML = activeProgs.map(p => {
+                        const rate = member ? getMemberProgramRate(p, member) : Number(p.guruAmount);
+                        return `<option value="${p.id}">${p.title} — RM ${rate.toFixed(2)}</option>`;
+                    }).join('');
+                }
+            }
+
+            updateProofCalculatedAmount();
+        }
+
+        function updateProofCalculatedAmount() {
+            const memberId = parseInt(document.getElementById('proof-member-select').value);
+            const member = state.members.find(m => m.id === memberId);
+            const type = document.getElementById('proof-payment-type').value;
+            let total = 0;
+
+            if (member) {
+                if (type === 'MONTHLY') {
+                    const rate = getMemberMonthlyRate(member);
+                    const count = document.querySelectorAll('input[name="proof_month_cb"]:checked').length;
+                    total = count * rate;
+                } else {
+                    const progId = document.getElementById('proof-program-select').value;
+                    const prog = (state.otherPrograms || []).find(p => p.id === progId);
+                    if (prog) {
+                        total = getMemberProgramRate(prog, member);
+                    }
+                }
+            }
+
+            document.getElementById('proof-amount-display').textContent = `RM ${total.toFixed(2)}`;
+        }
+
+        function handleProofImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('proof-file-label').textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // 1. High-clarity compressed image for Google Drive (max 900px)
+                    const canvasFull = document.createElement('canvas');
+                    const maxFull = 900;
+                    let w1 = img.width, h1 = img.height;
+                    if (w1 > maxFull || h1 > maxFull) {
+                        if (w1 >= h1) { h1 = Math.round((h1 * maxFull) / w1); w1 = maxFull; }
+                        else { w1 = Math.round((w1 * maxFull) / h1); h1 = maxFull; }
+                    }
+                    canvasFull.width = w1;
+                    canvasFull.height = h1;
+                    canvasFull.getContext('2d').drawImage(img, 0, 0, w1, h1);
+                    uploadedProofFullBase64 = canvasFull.toDataURL('image/jpeg', 0.78);
+
+                    // 2. Compact fallback thumbnail (max 340px) if Drive is unavailable
+                    const canvasThumb = document.createElement('canvas');
+                    const maxThumb = 340;
+                    let w2 = img.width, h2 = img.height;
+                    if (w2 > maxThumb || h2 > maxThumb) {
+                        if (w2 >= h2) { h2 = Math.round((h2 * maxThumb) / w2); w2 = maxThumb; }
+                        else { w2 = Math.round((w2 * maxThumb) / h2); h2 = maxThumb; }
+                    }
+                    canvasThumb.width = w2;
+                    canvasThumb.height = h2;
+                    canvasThumb.getContext('2d').drawImage(img, 0, 0, w2, h2);
+                    uploadedProofThumbBase64 = canvasThumb.toDataURL('image/jpeg', 0.65);
+
+                    document.getElementById('proof-image-preview').src = uploadedProofFullBase64;
+                    document.getElementById('proof-preview-wrap').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function submitUploadProof(e) {
+            e.preventDefault();
+            const memberId = parseInt(document.getElementById('proof-member-select').value);
+            const member = state.members.find(m => m.id === memberId);
+            if (!member) return;
+
+            const type = document.getElementById('proof-payment-type').value;
+            let monthsIndices = [];
+            let monthsLabel = '';
+            let programId = '';
+            let programTitle = '';
+            let amount = 0;
+
+            if (type === 'MONTHLY') {
+                document.querySelectorAll('input[name="proof_month_cb"]:checked').forEach(cb => {
+                    monthsIndices.push(parseInt(cb.value));
+                });
+                if (monthsIndices.length === 0) {
+                    showToast('Sila tandakan sekurang-kurangnya satu bulan yang dibayar.', 'error');
+                    return;
+                }
+                monthsLabel = monthsIndices.map(i => MONTH_SHORT[i]).join(', ');
+                amount = monthsIndices.length * getMemberMonthlyRate(member);
+            } else {
+                programId = document.getElementById('proof-program-select').value;
+                const prog = (state.otherPrograms || []).find(p => p.id === programId);
+                if (!prog) {
+                    showToast('Sila pilih kategori program yang sah.', 'error');
+                    return;
+                }
+                programTitle = prog.title;
+                amount = getMemberProgramRate(prog, member);
+            }
+
+            if (!uploadedProofFullBase64) {
+                showToast('Sila muat naik gambar screenshot resit pembayaran.', 'error');
+                return;
+            }
+
+            const method = document.getElementById('proof-method-select').value;
+            const paymentDate = document.getElementById('proof-date-input').value || getTodayIsoDate();
+            const notes = document.getElementById('proof-notes-input').value.trim();
+
+            const btn = document.getElementById('btn-submit-proof');
+            const btnText = document.getElementById('btn-submit-proof-text');
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-wait');
+            btnText.textContent = 'Memuat Naik Bukti...';
+
+            const proofPayload = {
+                memberId: member.id,
+                memberName: member.name,
+                memberCategory: member.category,
+                paymentType: type,
+                monthsIndices: monthsIndices,
+                monthsLabel: monthsLabel,
+                programId: programId,
+                programTitle: programTitle,
+                amount: amount,
+                method: method,
+                paymentDate: paymentDate,
+                notes: notes,
+                imageBase64: uploadedProofFullBase64,
+                fallbackThumb: uploadedProofThumbBase64.substring(0, 38000)
+            };
+
+            const scriptUrl = getActiveScriptUrl();
+            let savedInCloud = false;
+
+            if (scriptUrl) {
+                try {
+                    const response = await fetch(scriptUrl, {
+                        method: 'POST',
+                        redirect: 'follow',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: 'uploadProof', proofData: proofPayload })
+                    });
+                    const raw = await response.text();
+                    const resJson = JSON.parse(raw);
+                    if (resJson && resJson.status === 'ok' && resJson.proof) {
+                        if (!Array.isArray(state.pendingProofs)) state.pendingProofs = [];
+                        state.pendingProofs.unshift(resJson.proof);
+                        saveState(true);
+                        savedInCloud = true;
+                    }
+                } catch (err) {
+                    try {
+                        await fetch(scriptUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({ action: 'uploadProof', proofData: proofPayload })
+                        });
+                        await new Promise(r => setTimeout(r, 1500));
+                        await fetchFromCloud(false);
+                        savedInCloud = true;
+                    } catch (e2) {
+                        // Fallback to local
+                    }
+                }
+            }
+
+            if (!savedInCloud) {
+                if (!Array.isArray(state.pendingProofs)) state.pendingProofs = [];
+                state.pendingProofs.unshift({
+                    id: 'proof_' + Date.now(),
+                    submittedAt: formatDisplayDate(getTodayIsoDate()),
+                    memberId: member.id,
+                    memberName: member.name,
+                    memberCategory: member.category,
+                    paymentType: type,
+                    monthsIndices: monthsIndices,
+                    monthsLabel: monthsLabel,
+                    programId: programId,
+                    programTitle: programTitle,
+                    amount: amount,
+                    method: method,
+                    paymentDate: paymentDate,
+                    notes: notes,
+                    imageUrl: uploadedProofThumbBase64,
+                    driveViewUrl: '',
+                    status: 'PENDING'
+                });
+                saveState();
+            }
+
+            btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-wait');
+            btnText.textContent = 'Hantar Bukti Resit';
+
+            closeModal('modal-upload-proof');
+            syncAllViews();
+            showToast('Bukti resit berjaya dihantar! Bendahari akan menyemak dan mengesahkan bayaran anda.', 'success');
+        }
+
+        function setProofsFilter(filterKey) {
+            currentProofsFilter = filterKey;
+            const btnPending = document.getElementById('proof-filter-pending');
+            const btnApproved = document.getElementById('proof-filter-approved');
+
+            if (filterKey === 'PENDING') {
+                btnPending.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-2xs transition-all cursor-pointer";
+                btnApproved.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer";
+            } else {
+                btnApproved.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-2xs transition-all cursor-pointer";
+                btnPending.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all cursor-pointer";
+            }
+            renderTreasurerProofsView();
+        }
+
+        function renderTreasurerProofsView() {
+            const allProofs = state.pendingProofs || [];
+            const pendingList = allProofs.filter(p => p.status === 'PENDING');
+            const approvedList = allProofs.filter(p => p.status === 'APPROVED');
+
+            const badge = document.getElementById('treasurer-proofs-badge');
+            if (badge) {
+                badge.textContent = pendingList.length;
+                badge.className = pendingList.length > 0
+                    ? 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-500 text-white animate-pulse'
+                    : 'px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-slate-500 text-white';
+            }
+
+            const countPendingEl = document.getElementById('count-proofs-pending');
+            const countApprovedEl = document.getElementById('count-proofs-approved');
+            if (countPendingEl) countPendingEl.textContent = pendingList.length;
+            if (countApprovedEl) countApprovedEl.textContent = approvedList.length;
+
+            const grid = document.getElementById('treasurer-proofs-grid');
+            const emptyEl = document.getElementById('treasurer-proofs-empty');
+            if (!grid || !emptyEl) return;
+
+            const list = currentProofsFilter === 'PENDING' ? pendingList : approvedList;
+            if (list.length === 0) {
+                grid.innerHTML = '';
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+            emptyEl.classList.add('hidden');
+
+            grid.innerHTML = list.map(proof => {
+                const detailLabel = proof.paymentType === 'PROGRAM'
+                    ? `Program: ${proof.programTitle}`
+                    : `Yuran Bulanan: ${proof.monthsLabel}`;
+
+                const actionButtons = proof.status === 'PENDING'
+                    ? `<div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                        <button type="button" onclick="approvePaymentProof('${proof.id}')" class="py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer">
+                            ✓ Sahkan Lunas
+                        </button>
+                        <button type="button" onclick="rejectPaymentProof('${proof.id}')" class="py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition-colors cursor-pointer">
+                            Padam / Tolak
+                        </button>
+                    </div>`
+                    : `<div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="font-bold text-emerald-700">✓ Telah Disahkan</span>
+                        <button type="button" onclick="rejectPaymentProof('${proof.id}')" class="text-slate-400 hover:text-rose-600 text-[11px] font-semibold cursor-pointer">Padam Rekod</button>
+                    </div>`;
+
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-40 bg-slate-100 border-b border-slate-200 overflow-hidden cursor-pointer group" onclick="openViewProofModal('${proof.id}')">
+                                <img src="${proof.imageUrl}" alt="Resit ${proof.memberName}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200">
+                                <div class="absolute inset-0 bg-slate-900/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span class="px-3 py-1.5 rounded-lg bg-white text-slate-900 text-xs font-bold shadow">Klik Besarkan Resit</span>
+                                </div>
+                                <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-slate-900/80 text-white">
+                                    RM ${Number(proof.amount).toFixed(2)}
+                                </span>
+                            </div>
+
+                            <div class="p-4 space-y-2">
+                                <div class="flex items-start justify-between gap-2">
+                                    <h4 class="text-sm font-bold text-slate-900 leading-snug">${proof.memberName}</h4>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 shrink-0">${proof.memberCategory}</span>
+                                </div>
+                                <p class="text-xs font-bold text-indigo-700">${detailLabel}</p>
+                                <div class="text-[11px] text-slate-500 space-y-0.5">
+                                    <p>Kaedah: <strong>${proof.method}</strong> • Tarikh Bayar: <strong>${formatDisplayDate(proof.paymentDate)}</strong></p>
+                                    <p>Dihantar pada: ${proof.submittedAt}</p>
+                                    ${proof.notes ? `<p class="text-slate-700 italic">"${proof.notes}"</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="px-4 pb-4 space-y-2">
+                            <button type="button" onclick="openViewProofModal('${proof.id}')" class="w-full py-1.5 px-3 rounded-lg bg-sky-50 hover:bg-sky-100 text-blue-800 border border-blue-200 text-xs font-bold transition-colors cursor-pointer">
+                                Lihat Gambar Resit Penuh
+                            </button>
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openViewProofModal(proofId) {
+            const proof = (state.pendingProofs || []).find(p => p.id === proofId);
+            if (!proof) return;
+
+            const detailLabel = proof.paymentType === 'PROGRAM'
+                ? `Program: ${proof.programTitle}`
+                : `Yuran Bulanan: ${proof.monthsLabel}`;
+
+            document.getElementById('view-proof-meta').innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-sm font-bold text-slate-900">${proof.memberName} (${proof.memberCategory})</span>
+                    <span class="text-sm font-extrabold text-emerald-700">RM ${Number(proof.amount).toFixed(2)}</span>
+                </div>
+                <p class="font-bold text-indigo-700">${detailLabel}</p>
+                <p class="text-slate-600">Kaedah: <strong>${proof.method}</strong> • Tarikh Bayaran: <strong>${formatDisplayDate(proof.paymentDate)}</strong></p>
+                ${proof.notes ? `<p class="text-slate-700">Catatan: ${proof.notes}</p>` : ''}
+                ${proof.driveViewUrl ? `<p><a href="${proof.driveViewUrl}" target="_blank" class="text-blue-700 underline font-semibold">Buka Fail Asal di Google Drive ↗</a></p>` : ''}
+            `;
+
+            document.getElementById('view-proof-img').src = proof.imageUrl;
+
+            const actionsEl = document.getElementById('view-proof-actions');
+            if (proof.status === 'PENDING') {
+                actionsEl.innerHTML = `
+                    <button type="button" onclick="closeModal('modal-view-proof')" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer">Tutup</button>
+                    <button type="button" onclick="closeModal('modal-view-proof'); approvePaymentProof('${proof.id}')" class="px-5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-xs cursor-pointer">
+                        ✓ Sahkan & Rekod Lunas Sekarang
+                    </button>
+                `;
+            } else {
+                actionsEl.innerHTML = `
+                    <button type="button" onclick="closeModal('modal-view-proof')" class="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer">Tutup</button>
+                `;
+            }
+
+            document.getElementById('modal-view-proof').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function approvePaymentProof(proofId) {
+            const proof = (state.pendingProofs || []).find(p => p.id === proofId);
+            if (!proof) return;
+
+            const member = state.members.find(m => m.id === Number(proof.memberId));
+            if (!member) {
+                showToast('Rekod ahli tidak ditemui dalam senarai semasa.', 'error');
+                return;
+            }
+
+            const dateVal = proof.paymentDate || getTodayIsoDate();
+            const methodVal = proof.method || 'DuitNow QR';
+
+            if (proof.paymentType === 'MONTHLY') {
+                const indices = proof.monthsIndices || [];
+                indices.forEach(idx => {
+                    if (member.payments[idx]) {
+                        member.payments[idx] = { paid: true, date: dateVal, method: methodVal };
+                    }
+                });
+                const updatedFin = getMemberFinancials(member);
+                if (updatedFin.unpaidActiveCount === 0 && indices.length >= updatedFin.activeTotalMonths) {
+                    member.isLumpsum = true;
+                }
+                proof.status = 'APPROVED';
+                saveState();
+                syncAllViews();
+                showToast(`Bayaran yuran (${proof.monthsLabel}) bagi ${member.name} disahkan lunas!`, 'success');
+                openOfficialReceiptModal(member.id, indices);
+            } else {
+                const prog = (state.otherPrograms || []).find(p => p.id === proof.programId);
+                if (prog) {
+                    if (!prog.payments) prog.payments = {};
+                    prog.payments[member.id] = { paid: true, method: methodVal, date: dateVal };
+                }
+                proof.status = 'APPROVED';
+                saveState();
+                syncAllViews();
+                showToast(`Bayaran program "${proof.programTitle}" bagi ${member.name} disahkan lunas!`, 'success');
+            }
+        }
+
+        function rejectPaymentProof(proofId) {
+            state.pendingProofs = (state.pendingProofs || []).filter(p => p.id !== proofId);
+            saveState();
+            syncAllViews();
+            showToast('Rekod bukti bayaran telah dipadam.', 'info');
+        }
+
+        // =========================================================================
+        // 11. MODALS & TOAST UTILITIES
         // =========================================================================
         function renderAdminPanel() {
             const urlField = document.getElementById('admin-apps-script-url');
