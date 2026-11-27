@@ -2728,6 +2728,9 @@
         let cloudSyncTimer = null;
         let lastCloudDiagnostic = 'Belum disambungkan ke Google Sheets. Sistem menggunakan storan pelayar tempatan.';
         let currentReceiptEmailPayload = null;
+        let isCloudSaving = false;
+        let lastLocalMutationAt = 0;
+        let lastCloudSavedAt = '';
 
         function getActiveScriptUrl() {
             const hardcoded = (DEFAULT_APPS_SCRIPT_URL || '').trim();
@@ -2850,6 +2853,7 @@
         }
 
         function saveState(skipCloud = false) {
+            lastLocalMutationAt = Date.now();
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
             } catch (e) {
@@ -2860,7 +2864,7 @@
                 clearTimeout(cloudSyncTimer);
                 cloudSyncTimer = setTimeout(() => {
                     pushToCloud();
-                }, 350);
+                }, 300);
             }
         }
 
@@ -2922,12 +2926,62 @@
             return callAppsScriptJsonp(url, 'action=load');
         }
 
+        function postFormViaHiddenIframe(url, actionName, payloadObj) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const iframeName = '__ebkszs_post_frame_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+                    const iframe = document.createElement('iframe');
+                    iframe.name = iframeName;
+                    iframe.style.display = 'none';
+                    document.body.appendChild(iframe);
+
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
+                    form.target = iframeName;
+                    form.style.display = 'none';
+
+                    const inputAction = document.createElement('input');
+                    inputAction.type = 'hidden';
+                    inputAction.name = 'action';
+                    inputAction.value = actionName;
+                    form.appendChild(inputAction);
+
+                    const inputPayload = document.createElement('input');
+                    inputPayload.type = 'hidden';
+                    inputPayload.name = 'payload';
+                    inputPayload.value = JSON.stringify(payloadObj);
+                    form.appendChild(inputPayload);
+
+                    document.body.appendChild(form);
+                    form.submit();
+
+                    setTimeout(() => {
+                        form.remove();
+                        iframe.remove();
+                        resolve(true);
+                    }, 2200);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+
         function applyCloudPayload(data, url, showSuccessToast) {
+            // Elak data lama daripada awan menimpa perubahan yang baru sahaja dibuat dalam masa 8 saat
+            if (!showSuccessToast && (isCloudSaving || (Date.now() - lastLocalMutationAt < 8000))) {
+                return true;
+            }
+
             if (data && data.status === 'ok') {
                 if (data.hasData && data.payload) {
                     const incoming = data.payload;
+                    const preservedUrl = getActiveScriptUrl() || url;
                     state = Object.assign(createDefaultState(), incoming.config || {});
-                    state.appsScriptUrl = url;
+                    state.appsScriptUrl = preservedUrl;
+                    if (incoming.lastUpdated) {
+                        lastCloudSavedAt = incoming.lastUpdated;
+                    }
                     if (!Array.isArray(state.otherPrograms)) {
                         state.otherPrograms = createDefaultPrograms();
                     }
@@ -2945,7 +2999,11 @@
                     if (incoming.qr !== undefined) {
                         state.qrImage = incoming.qr || null;
                     }
-                    saveState(true);
+                    try {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+                    } catch (e) {
+                        // Abaikan ralat kuota storan
+                    }
                     syncAllViews();
                     setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya berhubung & menyegerakkan data terkini daripada Google Sheets.');
                     if (showSuccessToast) {
@@ -3023,9 +3081,11 @@
             const check = validateAppsScriptUrl(url);
             if (!check.valid) {
                 setCloudSyncIndicator('error', 'URL Tidak Sah', check.reason);
+                if (showSuccessToast) showToast(check.reason, 'error');
                 return;
             }
 
+            isCloudSaving = true;
             setCloudSyncIndicator('syncing', 'Menyimpan...');
             const { members, customLogoDataUrl, qrImage, pendingProofs, ...configOnly } = state;
             const bodyPayload = {
@@ -3050,46 +3110,58 @@
                     body: serialized
                 });
                 const rawText = await response.text();
-                const data = JSON.parse(rawText);
+                let data;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (parseErr) {
+                    throw new Error('Jawapan Apps Script bukan JSON. Pastikan Deploy -> New version & Who has access: Anyone.');
+                }
 
                 if (data && data.status === 'ok') {
-                    setCloudSyncIndicator('connected', 'Live Google Sheets', `Semua perubahan berjaya disimpan ke Google Sheets (${data.updatedAt || 'Terkini'}).`);
+                    isCloudSaving = false;
+                    lastCloudSavedAt = data.updatedAt || 'Terkini';
+                    setCloudSyncIndicator('connected', 'Live Google Sheets', `Semua perubahan berjaya disimpan ke Google Sheets (${lastCloudSavedAt}).`);
                     if (showSuccessToast) {
-                        showToast('Semua data berjaya disegerakkan ke Google Sheets secara real-time!', 'success');
+                        showToast(`Semua data berjaya disegerakkan ke Google Sheets (${lastCloudSavedAt})!`, 'success');
                     }
                     return;
                 } else {
                     const errMsg = `Gagal menyimpan ke Google Sheets: ${(data && data.message) || 'Ralat tidak diketahui'}`;
+                    isCloudSaving = false;
                     setCloudSyncIndicator('error', 'Ralat Simpan', errMsg);
                     if (showSuccessToast) showToast(errMsg, 'error');
                     return;
                 }
             } catch (err) {
                 try {
-                    await fetch(url, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'text/plain;charset=utf-8'
-                        },
-                        body: serialized
+                    await postFormViaHiddenIframe(url, 'save', {
+                        config: configOnly,
+                        members: members,
+                        logo: customLogoDataUrl || '',
+                        qr: qrImage || '',
+                        pendingProofs: pendingProofs || []
                     });
-                    await new Promise(r => setTimeout(r, 1200));
                     const verifyData = await loadViaJsonp(url);
-                    if (verifyData && verifyData.status === 'ok') {
-                        setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya disimpan ke Google Sheets (disahkan melalui mod keserasian pelayar).');
-                        if (showSuccessToast) {
-                            showToast('Data berjaya disimpan dan disegerakkan ke Google Sheets!', 'success');
+                    if (verifyData && verifyData.status === 'ok' && verifyData.hasData && Array.isArray(verifyData.payload.members)) {
+                        const cloudNames = verifyData.payload.members.map(m => m.name).join('|');
+                        const localNames = members.map(m => m.name).join('|');
+                        if (cloudNames === localNames) {
+                            isCloudSaving = false;
+                            setCloudSyncIndicator('connected', 'Live Google Sheets', 'Berjaya disimpan & disahkan ke Google Sheets.');
+                            if (showSuccessToast) {
+                                showToast('Semua data ahli & tetapan berjaya disimpan ke Google Sheets!', 'success');
+                            }
+                            return;
                         }
-                        return;
                     }
                 } catch (fallbackErr) {
-                    // Genuine connection / permission error
+                    // Gagal disahkan melalui iframe POST
                 }
 
-                const msg = 'Ralat Cloud: Pelayar gagal menyimpan ke Google Apps Script. Sila pastikan anda cipta "New version" di Deploy & Who has access: "Anyone".';
+                isCloudSaving = false;
+                const msg = `Ralat Cloud (${err.message || 'Gagal simpan'}): Semak Deploy Apps Script (pilih New version & Who has access: Anyone).`;
                 setCloudSyncIndicator('error', 'Ralat Cloud', msg);
-                if (showSuccessToast) showToast(msg, 'error');
+                showToast(msg, 'error');
             }
         }
 
